@@ -1,0 +1,24 @@
+GET http://localhost:8080/api/user/all
+
+###
+GET http://localhost:8080/api/user/ping
+
+###
+curl -X POST http://localhost:8080/api/user/test \
+-H "Content-Type: text/plain" \
+-d "hello"
+
+###
+
+curl -X POST http://localhost:8080/api/user/register \
+-H "Content-Type: application/json" \
+-d '{
+    "name": "John Doe",
+    "email": "johgjaa2@example.com",
+    "phone": "1234567890",
+    "password": "secure123",
+    "role": "USER"
+}'
+
+
+
