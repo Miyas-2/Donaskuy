@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Upload Dokumen | Donaskuy</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <h2>Verifikasi Dokumen</h2>
+    <div th:if="${canUpload}">
+        <form th:action="@{/dashboard/upload}" method="post" enctype="multipart/form-data">
+            <label>NIK:</label>
+            <input type="text" name="nik" required /><br />
+            <label>Nama:</label>
+            <input type="text" name="nama" required /><br />
+            <label>Tempat Lahir:</label>
+            <input type="text" name="tempatLahir" required /><br />
+            <label>Tanggal Lahir:</label>
+            <input type="date" name="tanggalLahir" required /><br />
+            <label>Jenis Kelamin:</label>
+            <select name="jenisKelamin" required>
+                <option value="LAKI_LAKI">Laki-laki</option>
+                <option value="PEREMPUAN">Perempuan</option>
+            </select><br />
+            <label>Alamat:</label>
+            <input type="text" name="alamat" required /><br />
+            <label>RT/RW:</label>
+            <input type="text" name="rtRw" required /><br />
+            <label>Kel/Desa:</label>
+            <input type="text" name="kelDesa" required /><br />
+            <label>Kecamatan:</label>
+            <input type="text" name="kecamatan" required /><br />
+            <label>Agama:</label>
+            <input type="text" name="agama" required /><br />
+            <label>Status Perkawinan:</label>
+            <input type="text" name="statusPerkawinan" required /><br />
+            <label>Pekerjaan:</label>
+            <input type="text" name="pekerjaan" required /><br />
+            <label>Kewarganegaraan:</label>
+            <input type="text" name="kewarganegaraan" required /><br />
+            <label>Golongan Darah:</label>
+            <input type="text" name="golDarah" required /><br />
+            <label>Foto KTP:</label>
+            <input type="file" name="fotoKtp" accept="image/*" required /><br />
+            <label>Foto Selfie dengan KTP:</label>
+            <input type="file" name="fotoSelfie" accept="image/*" required /><br />
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+    <!-- Form edit jika status terakhir REJECTED -->
+    <div th:if="${canEdit}">
+        <form th:action="@{/dashboard/upload/edit}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" th:value="${document.id}">
+            <label>NIK:</label>
+            <input type="text" name="nik" th:value="${document.nik}" required /><br />
+            <label>Nama:</label>
+            <input type="text" name="nama" th:value="${document.nama}" required /><br />
+            <label>Tempat Lahir:</label>
+            <input type="text" name="tempatLahir" th:value="${document.tempatLahir}" required /><br />
+            <label>Tanggal Lahir:</label>
+            <input type="date" name="tanggalLahir" th:value="${document.tanggalLahir}" required /><br />
+            <label>Jenis Kelamin:</label>
+            <select name="jenisKelamin" required>
+                <option value="LAKI_LAKI" th:selected="${document.jenisKelamin?.name() == 'LAKI_LAKI'}">Laki-laki
+                </option>
+                <option value="PEREMPUAN" th:selected="${document.jenisKelamin?.name() == 'PEREMPUAN'}">Perempuan
+                </option>
+            </select><br />
+            <label>Alamat:</label>
+            <input type="text" name="alamat" th:value="${document.alamat}" required /><br />
+            <label>RT/RW:</label>
+            <input type="text" name="rtRw" th:value="${document.rtRw}" required /><br />
+            <label>Kel/Desa:</label>
+            <input type="text" name="kelDesa" th:value="${document.kelDesa}" required /><br />
+            <label>Kecamatan:</label>
+            <input type="text" name="kecamatan" th:value="${document.kecamatan}" required /><br />
+            <label>Agama:</label>
+            <input type="text" name="agama" th:value="${document.agama}" required /><br />
+            <label>Status Perkawinan:</label>
+            <input type="text" name="statusPerkawinan" th:value="${document.statusPerkawinan}" required /><br />
+            <label>Pekerjaan:</label>
+            <input type="text" name="pekerjaan" th:value="${document.pekerjaan}" required /><br />
+            <label>Kewarganegaraan:</label>
+            <input type="text" name="kewarganegaraan" th:value="${document.kewarganegaraan}" required /><br />
+            <label>Golongan Darah:</label>
+            <input type="text" name="golDarah" th:value="${document.golDarah}" required /><br />
+            <label>Foto KTP:</label>
+            <input type="file" name="fotoKtp" accept="image/*"><br />
+            <label>Foto Selfie dengan KTP:</label>
+            <input type="file" name="fotoSelfie" accept="image/*"><br />
+            <button type="submit">Simpan Perubahan</button>
+        </form>
+    </div>
+
+    <!-- Info jika tidak bisa upload/edit -->
+    <div th:if="${!canUpload and !canEdit}">
+        <b style="color:orange;">Anda tidak dapat upload atau edit dokumen saat status masih <span
+                th:text="${documents[documents.size()-1].status}"></span>.</b>
+        <span th:if="${documents[documents.size()-1].status.name() == 'PENDING'}">Menunggu verifikasi admin.</span>
+        <span th:if="${documents[documents.size()-1].status.name() == 'VERIFIED'}">Dokumen sudah diverifikasi.</span>
+    </div>
+
+    <a href="/dashboard">Kembali ke Dashboard</a>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>NIK</th>
+            <th>Nama</th>
+            <th>Tempat/Tgl Lahir</th>
+            <th>Jenis Kelamin</th>
+            <th>Alamat</th>
+            <th>RT/RW</th>
+            <th>Kel/Desa</th>
+            <th>Kecamatan</th>
+            <th>Agama</th>
+            <th>Status Perkawinan</th>
+            <th>Pekerjaan</th>
+            <th>Kewarganegaraan</th>
+            <th>Gol. Darah</th>
+            <th>Foto KTP</th>
+            <th>Foto Selfie</th>
+            <th>Status</th>
+            <th>Waktu Upload</th>
+        </tr>
+        <tr th:each="doc : ${documents}">
+            <td th:text="${doc.nik}"></td>
+            <td th:text="${doc.nama}"></td>
+            <td>
+                <span th:text="${doc.tempatLahir}"></span>/<span th:text="${doc.tanggalLahir}"></span>
+            </td>
+            <td th:text="${doc.jenisKelamin}"></td>
+            <td th:text="${doc.alamat}"></td>
+            <td th:text="${doc.rtRw}"></td>
+            <td th:text="${doc.kelDesa}"></td>
+            <td th:text="${doc.kecamatan}"></td>
+            <td th:text="${doc.agama}"></td>
+            <td th:text="${doc.statusPerkawinan}"></td>
+            <td th:text="${doc.pekerjaan}"></td>
+            <td th:text="${doc.kewarganegaraan}"></td>
+            <td th:text="${doc.golDarah}"></td>
+            <td>
+                <img th:src="@{'/uploads/' + ${doc.fotoKtp}}" alt="Foto KTP" width="100" />
+            </td>
+            <td>
+                <img th:src="@{'/uploads/' + ${doc.fotoSelfie}}" alt="Foto Selfie" width="100" />
+            </td>
+            <td th:text="${doc.status}"></td>
+            <td th:text="${#temporals.format(doc.uploadedAt, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+    </table>
+</body>
+
+</html>

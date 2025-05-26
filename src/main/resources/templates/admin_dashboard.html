@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <h2>Admin Dashboard</h2>
+    <a href="/admin/logout">Logout</a>
+    <h3>CRUD Category Program</h3>
+    <form th:action="@{/admin/category/add}" method="post">
+        <input type="text" name="name" placeholder="Nama Category" required>
+        <input type="text" name="description" placeholder="Deskripsi" required>
+        <button type="submit">Tambah</button>
+    </form>
+    <ul>
+        <li th:each="cat : ${categories}">
+            <span th:text="${cat.name}"></span> - <span th:text="${cat.description}"></span>
+            <form th:action="@{/admin/category/delete}" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${cat.id}">
+                <button type="submit">Hapus</button>
+            </form>
+            <!-- Tombol Edit (toggle form) -->
+            <button type="button"
+                th:onclick="'document.getElementById(\'edit-cat-\' + ' + ${cat.id} + ').style.display=\'block\''">Edit</button>
+            <!-- Form Edit -->
+            <form th:id="'edit-cat-' + ${cat.id}" th:action="@{/admin/category/edit}" method="post"
+                style="display:none; margin-top:5px;">
+                <input type="hidden" name="id" th:value="${cat.id}">
+                <input type="text" name="name" th:value="${cat.name}" required>
+                <input type="text" name="description" th:value="${cat.description}" required>
+                <button type="submit">Simpan</button>
+                <button type="button" onclick="this.parentElement.style.display='none'">Batal</button>
+            </form>
+        </li>
+    </ul>
+
+
+    <h3>CRUD Program Donasi</h3>
+    <form th:action="@{/admin/program/add}" method="post" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Judul" required>
+        <input type="text" name="description" placeholder="Deskripsi" required>
+        <input type="number" name="targetAmount" placeholder="Target" required>
+        <input type="date" name="startDate" required>
+        <input type="date" name="endDate" required>
+        <select name="categoryId" required>
+            <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+        </select>
+        <input type="file" name="photo" accept="image/*" required>
+        <button type="submit">Tambah</button>
+    </form>
+    <ul>
+        <li th:each="prog : ${programs}">
+            <span th:text="${prog.title}"></span> - <span th:text="${prog.description}"></span>
+            <form th:action="@{/admin/program/delete}" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${prog.id}">
+                <button type="submit">Hapus</button>
+            </form>
+        </li>
+    </ul>
+
+    <table border="1">
+        <tr>
+            <th>Judul</th>
+            <th>Deskripsi</th>
+            <th>Target</th>
+            <th>Terkumpul</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Kategori</th>
+            <th>Foto</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+        <tr th:each="prog : ${programs}">
+            <td th:text="${prog.title}"></td>
+            <td th:text="${prog.description}"></td>
+            <td th:text="${prog.targetAmount}"></td>
+            <td th:text="${prog.totalDonasi}"></td>
+            <td th:text="${prog.startDate}"></td>
+            <td th:text="${prog.endDate}"></td>
+            <td th:text="${prog.category.name}"></td>
+            <td>
+                <img th:if="${prog.photo != null}" th:src="@{'/uploads/' + ${prog.photo}}" width="80"
+                    alt="Foto Program">
+            </td>
+            <td th:text="${prog.status}"></td>
+            <td>
+                <form th:action="@{/admin/program/delete}" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${prog.id}">
+                    <button type="submit">Hapus</button>
+                </form>
+                <form th:action="@{/admin/program/verify}" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${prog.id}">
+                    <select name="status">
+                        <option th:value="PENDING" th:selected="${prog.status.name() == 'PENDING'}">Pending</option>
+                        <option th:value="APPROVED" th:selected="${prog.status.name() == 'APPROVED'}">Approved</option>
+                        <option th:value="REJECTED" th:selected="${prog.status.name() == 'REJECTED'}">Ditolak</option>
+                    </select>
+                    <button type="submit">Proses</button>
+                </form>
+                <!-- Tombol Edit (toggle form) -->
+                <button type="button"
+                    th:onclick="'document.getElementById(\'edit-prog-\' + ' + ${prog.id} + ').style.display=\'block\''">Edit</button>
+                <!-- Link Detail -->
+                <a th:href="@{'/admin/program/' + ${prog.id}}" style="margin-left:5px;">Detail</a>
+
+                <!-- Form Edit -->
+                <form th:id="'edit-prog-' + ${prog.id}" th:action="@{/admin/program/edit}" method="post"
+                    enctype="multipart/form-data" style="display:none; margin-top:5px;">
+                    <input type="hidden" name="id" th:value="${prog.id}">
+                    <input type="text" name="title" th:value="${prog.title}" required>
+                    <input type="text" name="description" th:value="${prog.description}" required>
+                    <input type="number" name="targetAmount" th:value="${prog.targetAmount}" required>
+                    <input type="date" name="startDate" th:value="${prog.startDate}" required>
+                    <input type="date" name="endDate" th:value="${prog.endDate}" required>
+                    <select name="categoryId" required>
+                        <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
+                            th:selected="${cat.id == prog.category.id}"></option>
+                    </select>
+                    <div>
+                        <label>Foto Sekarang:</label>
+                        <img th:if="${prog.photo != null}" th:src="@{'/uploads/' + ${prog.photo}}" width="80"
+                            alt="Foto Program">
+                    </div>
+                    <input type="file" name="photo" accept="image/*">
+                    <button type="submit">Simpan</button>
+                    <button type="button" onclick="this.parentElement.style.display='none'">Batal</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <h3>Verifikasi Dokumen User</h3>
+    <table border="1">
+        <tr>
+            <th>User</th>
+            <th>NIK</th>
+            <th>Nama</th>
+            <th>Status</th>
+            <th>Foto KTP</th>
+            <th>Foto Selfie</th>
+            <th>Aksi</th>
+        </tr>
+        <tr th:each="doc : ${documents}">
+            <td th:text="${doc.user.name}"></td>
+            <td th:text="${doc.nik}"></td>
+            <td th:text="${doc.nama}"></td>
+            <td th:text="${doc.status}"></td>
+            <td><img th:src="@{'/uploads/' + ${doc.fotoKtp}}" width="80"></td>
+            <td><img th:src="@{'/uploads/' + ${doc.fotoSelfie}}" width="80"></td>
+            <td>
+                <form th:action="@{/admin/document/verify}" method="post" style="display:inline;">
+                    <input type="hidden" name="docId" th:value="${doc.id}">
+                    <select name="status">
+                        <option th:value="PENDING" th:selected="${doc.status.name() == 'PENDING'}">Pending</option>
+                        <option th:value="VERIFIED" th:selected="${doc.status.name() == 'VERIFIED'}">Terverifikasi
+                        </option>
+                        <option th:value="REJECTED" th:selected="${doc.status.name() == 'REJECTED'}">Ditolak</option>
+                    </select>
+                    <button type="submit">Proses</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

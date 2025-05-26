@@ -3,6 +3,7 @@ package com.charity.Donaskuy.Model;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,10 +21,12 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "donation_programs")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class DonationProgram {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,26 +34,41 @@ public class DonationProgram {
     private String title;
     private String description;
     private Double targetAmount;
-    private Double collectedAmount = 0.0;
-
-    @Enumerated(EnumType.STRING)
-    private ProgramStatus status = ProgramStatus.PENDING;
 
     private LocalDate startDate;
     private LocalDate endDate;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String photo;
+
+    @Enumerated(EnumType.STRING)
+    private ProgramStatus status = ProgramStatus.PENDING;
+
+    @Column(name = "collected_amount")
+    private Double collectedAmount = 0.0;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "donationProgram")
     private List<Donation> donations;
 
     public enum ProgramStatus {
         PENDING, APPROVED, REJECTED
+    }
+
+    // ...existing code...
+    public Double getTotalDonasi() {
+        if (donations == null) {
+            return 0.0;
+        }
+        return donations.stream()
+                .filter(d -> d.getPaymentStatus() == Donation.PaymentStatus.COMPLETED)
+                .mapToDouble(Donation::getAmount)
+                .sum();
     }
 }

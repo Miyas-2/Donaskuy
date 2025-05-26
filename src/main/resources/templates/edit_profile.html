@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Edit Profil</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <h2>Edit Profil</h2>
+    <form th:action="@{/dashboard/profile}" method="post" enctype="multipart/form-data">
+        <label>Nama:</label>
+        <input type="text" name="name" th:value="${user.name}" required /><br />
+        <label>No. HP:</label>
+        <input type="text" name="phone" th:value="${user.phone}" required /><br />
+        <label>Foto Profil:</label>
+        <input type="file" name="photo" accept="image/*"><br />
+        <div th:if="${user.photo != null}">
+            <img th:src="@{'/uploads/' + ${user.photo}}" alt="Foto Profil" width="120" style="margin-top:10px;"><br />
+        </div>
+        <label>Password Baru:</label>
+        <input type="password" name="password" placeholder="Kosongkan jika tidak ingin ganti"><br />
+        <label>Konfirmasi Password:</label>
+        <input type="password" name="confirmPassword" placeholder="Ulangi password baru"><br />
+        <button type="submit">Simpan</button>
+    </form>
+    <br>
+    <a href="/dashboard">Kembali ke Dashboard</a>
+</body>
+
+</html>

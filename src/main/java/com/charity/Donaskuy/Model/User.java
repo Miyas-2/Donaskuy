@@ -34,6 +34,8 @@ public class User {
     private String phone;
 
     private String password;
+    
+    private String photo;
 
     private Boolean isVerified = false;
 

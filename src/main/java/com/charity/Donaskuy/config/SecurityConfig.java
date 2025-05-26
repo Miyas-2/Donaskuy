@@ -12,14 +12,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // matikan CSRF
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll() // semua endpoint bebas akses
-            )
-            .httpBasic(Customizer.withDefaults()) // boleh dihapus, tapi aman disimpan
-            .formLogin(form -> form.disable()); // matikan form login
-
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll()
+                )
+                .formLogin(form -> form.disable()) // sudah benar, disable form login bawaan
+                .logout(logout -> logout.disable()); // tambahkan ini untuk disable logout default
         return http.build();
     }
 }
-

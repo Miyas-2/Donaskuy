@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detail Program Donasi</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2 th:text="${program.title}"></h2>
+    <img th:if="${program.photo != null}" th:src="@{'/uploads/' + ${program.photo}}" width="200" alt="Foto Program"><br>
+    <b>Deskripsi:</b> <span th:text="${program.description}"></span><br>
+    <b>Target:</b> <span th:text="${program.targetAmount}"></span><br>
+    <b>Periode:</b> <span th:text="${program.startDate}"></span> s/d <span th:text="${program.endDate}"></span><br>
+    <b>Kategori:</b> <span th:text="${program.category.name}"></span><br>
+    <b>Status:</b> <span th:text="${program.status}"></span><br>
+    <hr>
+    <h3>Form Donasi</h3>
+    <form th:action="@{'/dashboard/program/' + ${program.id} + '/donate'}" method="post">
+        <input type="number" name="amount" placeholder="Nominal" required min="1">
+        <input type="text" name="message" placeholder="Pesan (opsional)">
+        <button type="submit">Donasi</button>
+    </form>
+    <div th:if="${param.donated}">
+        <b style="color:orange;">Pembayaran sedang diproses... (otomatis selesai dalam 10 detik)</b>
+    </div>
+    <hr>
+    <h3>Daftar Donatur</h3>
+    <table border="1">
+        <tr>
+            <th>Nama Donatur</th>
+            <th>Nominal</th>
+            <th>Status Pembayaran</th>
+            <th>Pesan</th>
+            <th>Tanggal</th>
+        </tr>
+        <tr th:each="don : ${donations}">
+            <td th:text="${don.user.name}"></td>
+            <td th:text="${don.amount}"></td>
+            <td th:text="${don.paymentStatus}"></td>
+            <td th:text="${don.message}"></td>
+            <td th:text="${#temporals.format(don.donatedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+    </table>
+    <br>
+    <a href="/dashboard">Kembali ke Dashboard</a>
+</body>
+</html>
