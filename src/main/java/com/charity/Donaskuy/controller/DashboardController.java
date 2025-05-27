@@ -57,7 +57,8 @@ public class DashboardController {
         List<Donation> myDonations = donationRepository.findByUserId(user.getId());
         model.addAttribute("myDonations", myDonations);
 
-        return "dashboard";
+        // model.addAttribute("content", "dashboard_home :: content");
+        return "dashboard_home";
     }
 
     @GetMapping("/dashboard/program/{id}")
@@ -72,6 +73,7 @@ public class DashboardController {
         }
         model.addAttribute("program", prog);
         model.addAttribute("donations", prog.getDonations());
+        // model.addAttribute("content", "program_detail :: content"); // GANTI fragment sesuai file detail program
         return "program_detail";
     }
 
@@ -165,6 +167,7 @@ public class DashboardController {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
+        // model.addAttribute("content", "edit_profile :: content"); // GANTI fragment sesuai file edit profil
         return "edit_profile";
     }
 
@@ -211,5 +214,41 @@ public class DashboardController {
         return "redirect:/dashboard";
     }
 
-    
+    @GetMapping("/dashboard/programs/mine")
+    public String myPrograms(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        List<DonationProgram> myPrograms = programRepository.findByUser(user);
+        model.addAttribute("myPrograms", myPrograms);
+        // model.addAttribute("content", "dashboard_my_programs :: content");
+        return "dashboard_my_programs";
+    }
+
+    @GetMapping("/dashboard/program/add")
+    public String showAddProgram(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("categories", categoryRepository.findAll());
+        var docOpt = documentRepository.findTopByUserOrderByIdDesc(user);
+        model.addAttribute("docStatus", docOpt.map(UserDocument::getStatus).orElse(null));
+        // model.addAttribute("content", "dashboard_program_add :: content");
+        return "dashboard_program_add";
+    }
+
+    @GetMapping("/dashboard/donasi")
+    public String donasiSaya(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        List<Donation> myDonations = donationRepository.findByUserId(user.getId());
+        model.addAttribute("myDonations", myDonations);
+        // model.addAttribute("content", "dashboard_donasi :: content");
+        return "dashboard_donasi";
+    }
 }

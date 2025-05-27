@@ -67,40 +67,24 @@
 
     </div>
     <div class="main-content">
-        <h2>Program Saya</h2>
-        <table border="1" cellpadding="6" cellspacing="0" style="width:100%;margin-bottom:20px;">
+        <h3>Riwayat Donasi Anda</h3>
+        <table border="1" cellpadding="5">
             <tr>
-                <th>Judul</th>
-                <th>Deskripsi</th>
-                <th>Kategori</th>
-                <th>Target</th>
-                <th>Terkumpul</th>
-                <th>Periode</th>
-                <th>Status</th>
-                <th>Aksi</th>
+                <th>Program</th>
+                <th>Nominal</th>
+                <th>Status Pembayaran</th>
+                <th>Pesan</th>
+                <th>Tanggal</th>
             </tr>
-            <tr th:each="prog : ${myPrograms}">
-                <td th:text="${prog.title}"></td>
-                <td th:text="${prog.description}"></td>
-                <td th:text="${prog.category != null ? prog.category.name : '-'}"></td>
-                <td th:text="${prog.targetAmount}"></td>
-                <td th:text="${prog.collectedAmount}"></td>
-                <td>
-                    <span th:text="${prog.startDate}"></span> s/d <span th:text="${prog.endDate}"></span>
-                </td>
-                <td th:text="${prog.status}"></td>
-                <td>
-                    <a th:href="@{'/dashboard/program/' + ${prog.id}}">Detail</a>
-                    <!-- Tambahkan tombol edit/hapus jika status PENDING -->
-                    <span th:if="${prog.status.name() == 'PENDING'}">
-                        | <a th:href="@{'/dashboard/program/edit/' + ${prog.id}}">Edit</a>
-                        | <a th:href="@{'/dashboard/program/delete/' + ${prog.id}}"
-                            onclick="return confirm('Yakin hapus?')">Hapus</a>
-                    </span>
-                </td>
+            <tr th:each="don : ${myDonations}">
+                <td th:text="${don.donationProgram.title}"></td>
+                <td th:text="${don.amount}"></td>
+                <td th:text="${don.paymentStatus}"></td>
+                <td th:text="${don.message}"></td>
+                <td th:text="${#temporals.format(don.donatedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
             </tr>
-            <tr th:if="${#lists.isEmpty(myPrograms)}">
-                <td colspan="8" style="text-align:center;">Belum ada program yang diajukan.</td>
+            <tr th:if="${#lists.isEmpty(myDonations)}">
+                <td colspan="5" style="text-align:center;">Belum ada donasi</td>
             </tr>
         </table>
     </div>

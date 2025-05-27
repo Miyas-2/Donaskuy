@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Dashboard | Donaskuy</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: #f5f5f5;
+            padding: 20px 0;
+            min-height: 100vh;
+            border-right: 1px solid #ddd;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin: 10px 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .sidebar a:hover {
+            background: #e0e0e0;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="/dashboard">🏠 Beranda</a></li>
+                <li><a href="/dashboard/program/add">📤 Ajukan Program</a></li>
+                <li><a href="/dashboard/upload">📄 Verifikasi Dokumen</a></li>
+                <li><a href="/dashboard/donasi">💳 Donasi Saya</a></li>
+                <li><a href="/dashboard/programs/mine">📂 Program Saya</a></li>
+                <li><a href="/dashboard/profile">⚙️ Profil</a></li>
+                <li><a href="/logout">🚪 Logout</a></li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="main-content">
+        <!-- Konten sesuai menu -->
+        <div th:if="${docStatus?.name() == 'VERIFIED'}">
+            <h3>Ajukan Program Donasi Baru</h3>
+            <form th:action="@{/dashboard/program/add}" method="post" enctype="multipart/form-data">
+                <input type="text" name="title" placeholder="Judul" required>
+                <input type="text" name="description" placeholder="Deskripsi" required>
+                <input type="number" name="targetAmount" placeholder="Target" required>
+                <input type="date" name="startDate" required>
+                <input type="date" name="endDate" required>
+                <select name="categoryId" required>
+                    <option value="" disabled selected>Pilih Kategori</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                </select>
+                <input type="file" name="photo" accept="image/*" required>
+                <button type="submit">Ajukan</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

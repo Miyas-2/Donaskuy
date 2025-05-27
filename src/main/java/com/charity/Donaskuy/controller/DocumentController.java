@@ -38,6 +38,7 @@ public class DocumentController {
         model.addAttribute("canUpload", canUpload);
         model.addAttribute("document", canEdit ? lastDoc : new UserDocument());
 
+        // model.addAttribute("content", "upload_document :: content");
         return "upload_document";
     }
 
