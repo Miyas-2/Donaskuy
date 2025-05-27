@@ -46,7 +46,10 @@ public class DashboardController {
         if (user == null) {
             return "redirect:/login";
         }
-        List<DonationProgram> programs = programRepository.findByStatus(DonationProgram.ProgramStatus.APPROVED);
+        List<DonationProgram> programs = programRepository.findByStatusAndDonationStatus(
+                DonationProgram.ProgramStatus.APPROVED,
+                DonationProgram.DonationStatus.ACTIVE
+        );
         model.addAttribute("user", user);
         model.addAttribute("programs", programs);
 
@@ -89,6 +92,10 @@ public class DashboardController {
         DonationProgram prog = programRepository.findById(id).orElse(null);
         if (prog == null) {
             return "redirect:/dashboard";
+        }
+
+        if (prog.getDonationStatus() != DonationProgram.DonationStatus.ACTIVE) {
+            return "redirect:/dashboard/program/" + id + "?error=inactive";
         }
         Donation donation = new Donation();
         donation.setUser(user);

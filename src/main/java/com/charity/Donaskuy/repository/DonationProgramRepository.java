@@ -8,10 +8,15 @@ import org.springframework.stereotype.Repository;
 import com.charity.Donaskuy.Model.DonationProgram;
 import com.charity.Donaskuy.Model.User;
 
-
 @Repository
 public interface DonationProgramRepository extends JpaRepository<DonationProgram, Long> {
+
     List<DonationProgram> findByStatus(DonationProgram.ProgramStatus status);
 
     List<DonationProgram> findByUser(User user);
+
+    List<DonationProgram> findByStatusAndDonationStatus(
+            DonationProgram.ProgramStatus status,
+            DonationProgram.DonationStatus donationStatus
+    );
 }

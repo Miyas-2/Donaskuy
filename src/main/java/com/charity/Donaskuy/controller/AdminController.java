@@ -227,11 +227,15 @@ public class AdminController {
         return "redirect:/admin/login";
     }
 
-    @PostMapping("/program/verify")
-    public String verifyProgram(@RequestParam Long id, @RequestParam("status") DonationProgram.ProgramStatus status) {
+    @PostMapping("/program/status")
+    public String updateStatus(
+            @RequestParam Long id,
+            @RequestParam("status") DonationProgram.ProgramStatus status,
+            @RequestParam("donationStatus") DonationProgram.DonationStatus donationStatus) {
         DonationProgram prog = programRepo.findById(id).orElse(null);
         if (prog != null) {
             prog.setStatus(status);
+            prog.setDonationStatus(donationStatus);
             programRepo.save(prog);
         }
         return "redirect:/admin/dashboard";

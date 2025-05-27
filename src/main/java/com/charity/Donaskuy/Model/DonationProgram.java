@@ -61,6 +61,13 @@ public class DonationProgram {
         PENDING, APPROVED, REJECTED
     }
 
+    @Enumerated(EnumType.STRING)
+    private DonationStatus donationStatus = DonationStatus.ACTIVE;
+
+    public enum DonationStatus {
+        ACTIVE, INACTIVE
+    }
+
     // ...existing code...
     public Double getTotalDonasi() {
         if (donations == null) {

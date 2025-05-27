@@ -71,7 +71,8 @@
             <th>End Date</th>
             <th>Kategori</th>
             <th>Foto</th>
-            <th>Status</th>
+            <th>Status Program</th>
+            <th>Status Donasi</th>
             <th>Aksi</th>
         </tr>
         <tr th:each="prog : ${programs}">
@@ -88,16 +89,31 @@
             </td>
             <td th:text="${prog.status}"></td>
             <td>
+                <form th:action="@{/admin/program/donation-status}" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${prog.id}">
+                    <select name="donationStatus" onchange="this.form.submit()">
+                        <option th:value="ACTIVE" th:selected="${prog.donationStatus.name() == 'ACTIVE'}">Aktif</option>
+                        <option th:value="INACTIVE" th:selected="${prog.donationStatus.name() == 'INACTIVE'}">Tidak
+                            Aktif</option>
+                    </select>
+                </form>
+            </td>
+            <td>
                 <form th:action="@{/admin/program/delete}" method="post" style="display:inline;">
                     <input type="hidden" name="id" th:value="${prog.id}">
                     <button type="submit">Hapus</button>
                 </form>
-                <form th:action="@{/admin/program/verify}" method="post" style="display:inline;">
+                <form th:action="@{/admin/program/status}" method="post" style="display:inline;">
                     <input type="hidden" name="id" th:value="${prog.id}">
                     <select name="status">
                         <option th:value="PENDING" th:selected="${prog.status.name() == 'PENDING'}">Pending</option>
                         <option th:value="APPROVED" th:selected="${prog.status.name() == 'APPROVED'}">Approved</option>
                         <option th:value="REJECTED" th:selected="${prog.status.name() == 'REJECTED'}">Ditolak</option>
+                    </select>
+                    <select name="donationStatus">
+                        <option th:value="ACTIVE" th:selected="${prog.donationStatus.name() == 'ACTIVE'}">Aktif</option>
+                        <option th:value="INACTIVE" th:selected="${prog.donationStatus.name() == 'INACTIVE'}">Tidak
+                            Aktif</option>
                     </select>
                     <button type="submit">Proses</button>
                 </form>

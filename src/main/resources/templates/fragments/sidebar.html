@@ -1,0 +1,60 @@
+<!-- file: sidebar.html -->
+<div class="sidebar" th:fragment="sidebar">
+    <!-- Fixed sidebar container -->
+    <div class="fixed top-0 left-0 bottom-0 w-64 bg-white border-r border-gray-200 flex flex-col">
+        <!-- Sidebar content with scrolling if needed -->
+        <div class="p-4 flex-1 flex flex-col overflow-y-auto">
+            <div class="mb-8 p-4">
+                <h1 class="text-xl font-semibold text-gray-800">Donaskuy</h1>
+            </div>
+            <nav class="flex-1">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/dashboard" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700 hover:text-blue-600 transition-colors">
+                            <span class="mr-3">🏠</span>
+                            <span>Beranda</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/program/add" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700 hover:text-blue-600 transition-colors">
+                            <span class="mr-3">📤</span>
+                            <span>Ajukan Program</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/upload" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700 hover:text-blue-600 transition-colors">
+                            <span class="mr-3">📄</span>
+                            <span>Verifikasi Dokumen</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/donasi" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700 hover:text-blue-600 transition-colors">
+                            <span class="mr-3">💳</span>
+                            <span>Donasi Saya</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/programs/mine" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700 hover:text-blue-600 transition-colors">
+                            <span class="mr-3">📂</span>
+                            <span>Program Saya</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/profile" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700 hover:text-blue-600 transition-colors">
+                            <span class="mr-3">⚙️</span>
+                            <span>Profil</span>
+                        </a>
+                    </li>
+                    <li class="mt-8 pt-4 border-t border-gray-200">
+                        <a href="/logout" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700 hover:text-red-600 transition-colors">
+                            <span class="mr-3">🚪</span>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!-- Spacer to push main content -->
+    <div class="w-64 flex-shrink-0"></div>
+</div>
