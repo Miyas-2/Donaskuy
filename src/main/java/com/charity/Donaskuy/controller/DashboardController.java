@@ -253,9 +253,31 @@ public class DashboardController {
         if (user == null) {
             return "redirect:/login";
         }
+
         List<Donation> myDonations = donationRepository.findByUserId(user.getId());
         model.addAttribute("myDonations", myDonations);
-        // model.addAttribute("content", "dashboard_donasi :: content");
+
+        // Calculate total donations
+        double totalDonations = myDonations.stream()
+                .filter(d -> d.getPaymentStatus() == Donation.PaymentStatus.COMPLETED)
+                .mapToDouble(Donation::getAmount)
+                .sum();
+        model.addAttribute("totalDonations", totalDonations);
+
+        // Calculate number of supported programs
+        long supportedPrograms = myDonations.stream()
+                .filter(d -> d.getPaymentStatus() == Donation.PaymentStatus.COMPLETED)
+                .map(d -> d.getDonationProgram().getId())
+                .distinct()
+                .count();
+        model.addAttribute("supportedPrograms", supportedPrograms);
+
+        // Calculate social impact (assuming each donation helps 2 people on average)
+        long impactCount = myDonations.stream()
+                .filter(d -> d.getPaymentStatus() == Donation.PaymentStatus.COMPLETED)
+                .count() * 2; // Multiply by average impact per donation
+        model.addAttribute("impactCount", impactCount);
+
         return "dashboard_donasi";
     }
 }
