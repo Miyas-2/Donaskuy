@@ -54,6 +54,9 @@ public class DashboardController {
         var docOpt = documentRepository.findTopByUserOrderByIdDesc(user);
         model.addAttribute("docStatus", docOpt.map(UserDocument::getStatus).orElse(null));
 
+        List<Donation> myDonations = donationRepository.findByUserId(user.getId());
+        model.addAttribute("myDonations", myDonations);
+
         return "dashboard";
     }
 
@@ -207,4 +210,6 @@ public class DashboardController {
 
         return "redirect:/dashboard";
     }
+
+    
 }

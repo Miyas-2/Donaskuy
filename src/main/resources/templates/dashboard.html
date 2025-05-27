@@ -53,6 +53,27 @@
             <button type="submit">Ajukan</button>
         </form>
     </div>
+    <hr>
+    <h3>Riwayat Donasi Anda</h3>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Program</th>
+            <th>Nominal</th>
+            <th>Status Pembayaran</th>
+            <th>Pesan</th>
+            <th>Tanggal</th>
+        </tr>
+        <tr th:each="don : ${myDonations}">
+            <td th:text="${don.donationProgram.title}"></td>
+            <td th:text="${don.amount}"></td>
+            <td th:text="${don.paymentStatus}"></td>
+            <td th:text="${don.message}"></td>
+            <td th:text="${#temporals.format(don.donatedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(myDonations)}">
+            <td colspan="5" style="text-align:center;">Belum ada donasi</td>
+        </tr>
+    </table>
 </body>
 
 </html>
