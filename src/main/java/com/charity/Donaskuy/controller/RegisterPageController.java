@@ -1,5 +1,6 @@
 package com.charity.Donaskuy.controller;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegisterPageController {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
@@ -24,8 +26,10 @@ public class RegisterPageController {
 
     @PostMapping("/register")
     public String processRegister(@ModelAttribute("user") User user) {
-         user.setRole(User.Role.USER); 
+        user.setRole(User.Role.USER);
+        // Encode the password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        return "redirect:/";
+        return "redirect:/login?registered";
     }
 }

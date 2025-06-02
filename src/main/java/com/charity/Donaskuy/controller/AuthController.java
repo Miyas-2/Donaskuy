@@ -1,44 +1,40 @@
 package com.charity.Donaskuy.controller;
 
-import com.charity.Donaskuy.Model.User;
-import com.charity.Donaskuy.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserRepository userRepository;
-
     @GetMapping("/login")
-    public String showLoginForm(HttpSession session) {
-        if (session.getAttribute("user") != null) {
+    public String showLoginForm() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (auth != null && auth.isAuthenticated() && 
+                !auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ANONYMOUS"))) {
+            
+            if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+                return "redirect:/admin/dashboard";
+            }
             return "redirect:/dashboard";
         }
+        
         return "login";
     }
 
-    @PostMapping("/login")
-    public String processLogin(@RequestParam String email,
-            @RequestParam String password,
-            HttpSession session,
-            Model model) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user != null && user.getPassword().equals(password)) {
-            session.setAttribute("user", user);
-            return "redirect:/dashboard";
-        }
-        model.addAttribute("error", "Email atau password salah!");
-        return "login";
-    }
+    // Remove the POST /login method as Spring Security will handle it
 
+    // Keep the logout mapping for compatibility
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/";
+        return "redirect:/login?logout";
     }
 }
