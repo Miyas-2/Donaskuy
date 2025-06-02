@@ -20,14 +20,13 @@ import com.charity.Donaskuy.Model.Donation;
 import com.charity.Donaskuy.Model.DonationProgram;
 import com.charity.Donaskuy.Model.User;
 import com.charity.Donaskuy.Model.UserDocument;
+import com.charity.Donaskuy.repository.CategoryRepository;
 import com.charity.Donaskuy.repository.DonationProgramRepository;
 import com.charity.Donaskuy.repository.DonationRepository;
 import com.charity.Donaskuy.repository.UserDocumentRepository;
 import com.charity.Donaskuy.repository.UserRepository;
-import com.charity.Donaskuy.repository.CategoryRepository;
 
 import jakarta.servlet.http.HttpSession;
-
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -41,26 +40,38 @@ public class DashboardController {
     private final UserRepository userRepository;
 
     @GetMapping("/dashboard")
-    public String dashboard(HttpSession session, Model model) {
+    public String dashboard(@RequestParam(required = false) Long categoryId,
+            HttpSession session,
+            Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "redirect:/login";
         }
-        List<DonationProgram> programs = programRepository.findByStatusAndDonationStatus(
-                DonationProgram.ProgramStatus.APPROVED,
-                DonationProgram.DonationStatus.ACTIVE
-        );
+
+        List<DonationProgram> programs;
+        if (categoryId != null) {
+            // Filter by category if categoryId is provided
+            programs = programRepository.findByStatusAndDonationStatusAndCategoryId(
+                    DonationProgram.ProgramStatus.APPROVED,
+                    DonationProgram.DonationStatus.ACTIVE,
+                    categoryId
+            );
+        } else {
+            // Show all if no category filter
+            programs = programRepository.findByStatusAndDonationStatus(
+                    DonationProgram.ProgramStatus.APPROVED,
+                    DonationProgram.DonationStatus.ACTIVE
+            );
+        }
+
         model.addAttribute("user", user);
         model.addAttribute("programs", programs);
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("selectedCategoryId", categoryId);
 
-        model.addAttribute("categories", categoryRepository.findAll()); // Ambil status dokumen terbaru user
         var docOpt = documentRepository.findTopByUserOrderByIdDesc(user);
         model.addAttribute("docStatus", docOpt.map(UserDocument::getStatus).orElse(null));
 
-        List<Donation> myDonations = donationRepository.findByUserId(user.getId());
-        model.addAttribute("myDonations", myDonations);
-
-        // model.addAttribute("content", "dashboard_home :: content");
         return "dashboard_home";
     }
 
@@ -218,7 +229,7 @@ public class DashboardController {
         userRepository.save(user);
         session.setAttribute("user", user);
 
-        return "redirect:/dashboard";
+        return "redirect:/dashboard/profile";
     }
 
     @GetMapping("/dashboard/programs/mine")
@@ -241,9 +252,9 @@ public class DashboardController {
         }
         model.addAttribute("user", user);
         model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("isEdit", false); // Add this line
         var docOpt = documentRepository.findTopByUserOrderByIdDesc(user);
         model.addAttribute("docStatus", docOpt.map(UserDocument::getStatus).orElse(null));
-        // model.addAttribute("content", "dashboard_program_add :: content");
         return "dashboard_program_add";
     }
 
@@ -279,5 +290,110 @@ public class DashboardController {
         model.addAttribute("impactCount", impactCount);
 
         return "dashboard_donasi";
+    }
+
+    // ...existing code...
+    @GetMapping("/dashboard/program/edit/{id}")
+    public String editProgram(@PathVariable Long id, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        DonationProgram program = programRepository.findById(id).orElse(null);
+        if (program == null || !program.getUser().getId().equals(user.getId())) {
+            return "redirect:/dashboard/programs/mine";
+        }
+
+        // Only allow editing if status is PENDING
+        if (program.getStatus() != DonationProgram.ProgramStatus.PENDING) {
+            return "redirect:/dashboard/programs/mine?error=cantedit";
+        }
+
+        model.addAttribute("program", program);
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("isEdit", true);
+        model.addAttribute("docStatus", UserDocument.DocumentStatus.VERIFIED); // Fixed: Status -> DocumentStatus
+
+        return "dashboard_program_add";
+    }
+
+    @PostMapping("/dashboard/program/edit/{id}")
+    public String updateProgram(@PathVariable Long id,
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam Double targetAmount,
+            @RequestParam String startDate,
+            @RequestParam String endDate,
+            @RequestParam Long categoryId,
+            @RequestParam(value = "photo", required = false) MultipartFile photo,
+            HttpSession session) throws IOException {
+
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        DonationProgram program = programRepository.findById(id).orElse(null);
+        if (program == null || !program.getUser().getId().equals(user.getId())) {
+            return "redirect:/dashboard/programs/mine";
+        }
+
+        if (program.getStatus() != DonationProgram.ProgramStatus.PENDING) {
+            return "redirect:/dashboard/programs/mine?error=cantedit";
+        }
+
+        program.setTitle(title);
+        program.setDescription(description);
+        program.setTargetAmount(targetAmount);
+        program.setStartDate(LocalDate.parse(startDate));
+        program.setEndDate(LocalDate.parse(endDate));
+
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+        program.setCategory(category);
+
+        // Update photo if provided
+        if (photo != null && !photo.isEmpty()) {
+            String uploadDir = System.getProperty("user.dir") + "/uploads/";
+            File dir = new File(uploadDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            String photoName = System.currentTimeMillis() + "_" + photo.getOriginalFilename();
+            photo.transferTo(new File(uploadDir + photoName));
+            program.setPhoto(photoName);
+        }
+
+        programRepository.save(program);
+        return "redirect:/dashboard/programs/mine?updated";
+    }
+
+    @GetMapping("/dashboard/program/delete/{id}")
+    public String deleteProgram(@PathVariable Long id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        DonationProgram program = programRepository.findById(id).orElse(null);
+        if (program == null || !program.getUser().getId().equals(user.getId())) {
+            return "redirect:/dashboard/programs/mine";
+        }
+
+        if (program.getStatus() != DonationProgram.ProgramStatus.PENDING) {
+            return "redirect:/dashboard/programs/mine?error=cantdelete";
+        }
+
+        // Delete photo file if exists
+        if (program.getPhoto() != null) {
+            String uploadDir = System.getProperty("user.dir") + "/uploads/";
+            File photoFile = new File(uploadDir + program.getPhoto());
+            if (photoFile.exists()) {
+                photoFile.delete();
+            }
+        }
+
+        programRepository.delete(program);
+        return "redirect:/dashboard/programs/mine?deleted";
     }
 }

@@ -2,48 +2,178 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main})}">
 
 <head>
-    <title>Dashboard - Donaskuy</title>
+    <title>Program Saya - Donaskuy SDGS</title>
+    <style>
+        .program-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        .program-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #0d9488, #14b8a6);
+            border-radius: 3px;
+        }
+        .empty-state {
+            background: linear-gradient(135deg, #f8fafc, #f0fdfa);
+            border-radius: 16px;
+        }
+        .action-link {
+            transition: all 0.2s ease;
+        }
+        .action-link:hover {
+            transform: translateX(2px);
+        }
+    </style>
 </head>
-<main>
 
-    <h2>Program Saya</h2>
-    <table border="1" cellpadding="6" cellspacing="0" style="width:100%;margin-bottom:20px;">
-        <tr>
-            <th>Judul</th>
-            <th>Deskripsi</th>
-            <th>Kategori</th>
-            <th>Target</th>
-            <th>Terkumpul</th>
-            <th>Periode</th>
-            <th>Status</th>
-            <th>Status Program</th>
-            <th>Aksi</th>
-        </tr>
-        <tr th:each="prog : ${myPrograms}">
-            <td th:text="${prog.title}"></td>
-            <td th:text="${prog.description}"></td>
-            <td th:text="${prog.category != null ? prog.category.name : '-'}"></td>
-            <td th:text="${prog.targetAmount}"></td>
-            <td th:text="${prog.collectedAmount}"></td>
-            <td>
-                <span th:text="${prog.startDate}"></span> s/d <span th:text="${prog.endDate}"></span>
-            </td>
-            <td th:text="${prog.status}"></td>
-            <td th:text="${prog.donationStatus}"></td>
-            <td>
-                <a th:href="@{'/dashboard/program/' + ${prog.id}}">Detail</a>
-                <!-- Tambahkan tombol edit/hapus jika status PENDING -->
-                <span th:if="${prog.status.name() == 'PENDING'}">
-                    | <a th:href="@{'/dashboard/program/edit/' + ${prog.id}}">Edit</a>
-                    | <a th:href="@{'/dashboard/program/delete/' + ${prog.id}}"
-                        onclick="return confirm('Yakin hapus?')">Hapus</a>
-                </span>
-            </td>
-        </tr>
-        <tr th:if="${#lists.isEmpty(myPrograms)}">
-            <td colspan="8" style="text-align:center;">Belum ada program yang diajukan.</td>
-        </tr>
-    </table>
+<main class="max-w-7xl mx-auto py-6 px-4 sm:px-6">
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Program Saya</h1>
+            <p class="text-sm text-gray-600 mt-1">Kelola program donasi untuk pembangunan berkelanjutan</p>
+        </div>
+        <a href="/dashboard/program/add" class="inline-flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 shadow-md transition-all duration-200">
+            <i class="fas fa-plus mr-2"></i> Ajukan Program
+        </a>
+    </div>
+
+    <!-- Programs Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <!-- Table Header -->
+        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+            <h3 class="text-lg font-semibold text-gray-900">Daftar Program</h3>
+            <p class="text-sm text-gray-600 mt-1">Program yang Anda ajukan untuk donasi</p>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pendanaan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-100">
+                    <tr th:each="prog : ${myPrograms}" class="program-card hover:bg-gray-50/50">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-12 w-12 rounded-lg overflow-hidden">
+                                    <img th:if="${prog.photo}" th:src="@{'/uploads/' + ${prog.photo}}" class="h-full w-full object-cover">
+                                    <div th:unless="${prog.photo}" class="h-full w-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+                                        <i class="fas fa-image text-gray-300 text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-semibold text-gray-900" th:text="${prog.title}"></div>
+                                    <div class="text-xs text-gray-500 mt-1 line-clamp-1" th:text="${prog.description}"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 text-xs font-medium rounded-full"
+                                th:classappend="${prog.category?.name == 'Lingkungan' ? 'bg-green-50 text-green-700' : 
+                                              'bg-blue-50 text-blue-700'}">
+                                <i th:classappend="${prog.category?.name == 'Lingkungan' ? 'fas fa-leaf mr-1.5' : 
+                                                  'fas fa-hands-helping mr-1.5'}"></i>
+                                <span th:text="${prog.category?.name ?: 'Umum'}"></span>
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-semibold text-gray-900">
+                                Rp<span th:text="${#numbers.formatDecimal(prog.collectedAmount ?: 0, 1, 'POINT', 0, 'COMMA')}"></span>
+                                <span class="text-xs text-gray-500">dari Rp<span th:text="${#numbers.formatDecimal(prog.targetAmount, 1, 'POINT', 0, 'COMMA')}"></span></span>
+                            </div>
+                            <div class="mt-2">
+                                <div class="progress-bar w-full bg-gray-100">
+                                    <div class="progress-fill h-full"
+                                        th:style="'width: ' + ${#numbers.formatInteger(((prog.collectedAmount ?: 0) / prog.targetAmount * 100 < 100) ? ((prog.collectedAmount ?: 0) / prog.targetAmount * 100) : 100, 1)} + '%'">
+                                    </div>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1 text-right">
+                                    <span th:text="${#numbers.formatDecimal((prog.collectedAmount ?: 0) / prog.targetAmount * 100, 1, 2)}"></span>%
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span th:if="${prog.status.name() == 'PENDING'}"
+                                class="status-badge bg-amber-50 text-amber-700">
+                                <i class="fas fa-clock mr-1.5"></i>Pending
+                            </span>
+                            <span th:if="${prog.status.name() == 'APPROVED'}"
+                                class="status-badge bg-green-50 text-green-700">
+                                <i class="fas fa-check-circle mr-1.5"></i>Disetujui
+                            </span>
+                            <span th:if="${prog.status.name() == 'REJECTED'}"
+                                class="status-badge bg-red-50 text-red-700">
+                                <i class="fas fa-times-circle mr-1.5"></i>Ditolak
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <a th:href="@{'/dashboard/program/' + ${prog.id}}"
+                                    class="action-link text-sm text-primary-600 hover:text-primary-800">
+                                    <i class="fas fa-eye mr-1.5"></i>Detail
+                                </a>
+                                <span th:if="${prog.status.name() == 'PENDING'}" class="flex flex-col sm:flex-row gap-3">
+                                    <a th:href="@{'/dashboard/program/edit/' + ${prog.id}}"
+                                        class="action-link text-sm text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit mr-1.5"></i>Edit
+                                    </a>
+                                    <button th:onclick="'deleteProgram(' + ${prog.id} + ')'"
+                                        class="action-link text-sm text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash mr-1.5"></i>Hapus
+                                    </button>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${#lists.isEmpty(myPrograms)}" class="empty-state p-12 text-center">
+            <div class="mx-auto w-20 h-20 rounded-full bg-primary-50 flex items-center justify-center text-primary-600 mb-4">
+                <i class="fas fa-folder-open text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900">Belum ada program</h3>
+            <p class="text-sm text-gray-600 mt-2 max-w-md mx-auto">
+                Anda belum mengajukan program donasi. Mari mulai kampanye untuk mendukung SDGs!
+            </p>
+            <div class="mt-6">
+                <a href="/dashboard/program/add" class="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-lg text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 shadow-md transition-all duration-200">
+                    <i class="fas fa-plus mr-2"></i> Ajukan Program
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal Script -->
+    <script>
+        function deleteProgram(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus program ini? Tindakan ini tidak dapat dibatalkan.')) {
+                window.location.href = '/dashboard/program/delete/' + id;
+            }
+        }
+    </script>
 </main>
-
 </html>

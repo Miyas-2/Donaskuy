@@ -2,153 +2,437 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main})}">
 
 <head>
-    <title>Dashboard - Donaskuy</title>
+    <title>Verifikasi Dokumen - Donaskuy SDGS</title>
+    <style>
+        .verification-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        }
+        .form-section {
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .form-input {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            border-color: #0d9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+        .submit-btn {
+            background: linear-gradient(90deg, #0d9488, #14b8a6);
+            color: white;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
+        }
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        .photo-preview {
+            border: 2px dashed #e5e7eb;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        .photo-preview:hover {
+            border-color: #0d9488;
+        }
+        .back-link {
+            color: #0d9488;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .back-link:hover {
+            color: #0f766e;
+            transform: translateX(-2px);
+        }
+    </style>
 </head>
-<main>
-    <!-- Konten sesuai menu -->
-    <h2>Verifikasi Dokumen</h2>
-    <div th:if="${canUpload}">
-        <form th:action="@{/dashboard/upload}" method="post" enctype="multipart/form-data">
-            <label>NIK:</label>
-            <input type="text" name="nik" required /><br />
-            <label>Nama:</label>
-            <input type="text" name="nama" required /><br />
-            <label>Tempat Lahir:</label>
-            <input type="text" name="tempatLahir" required /><br />
-            <label>Tanggal Lahir:</label>
-            <input type="date" name="tanggalLahir" required /><br />
-            <label>Jenis Kelamin:</label>
-            <select name="jenisKelamin" required>
-                <option value="LAKI_LAKI">Laki-laki</option>
-                <option value="PEREMPUAN">Perempuan</option>
-            </select><br />
-            <label>Alamat:</label>
-            <input type="text" name="alamat" required /><br />
-            <label>RT/RW:</label>
-            <input type="text" name="rtRw" required /><br />
-            <label>Kel/Desa:</label>
-            <input type="text" name="kelDesa" required /><br />
-            <label>Kecamatan:</label>
-            <input type="text" name="kecamatan" required /><br />
-            <label>Agama:</label>
-            <input type="text" name="agama" required /><br />
-            <label>Status Perkawinan:</label>
-            <input type="text" name="statusPerkawinan" required /><br />
-            <label>Pekerjaan:</label>
-            <input type="text" name="pekerjaan" required /><br />
-            <label>Kewarganegaraan:</label>
-            <input type="text" name="kewarganegaraan" required /><br />
-            <label>Golongan Darah:</label>
-            <input type="text" name="golDarah" required /><br />
-            <label>Foto KTP:</label>
-            <input type="file" name="fotoKtp" accept="image/*" required /><br />
-            <label>Foto Selfie dengan KTP:</label>
-            <input type="file" name="fotoSelfie" accept="image/*" required /><br />
-            <button type="submit">Upload</button>
-        </form>
-    </div>
-    <!-- Form edit jika status terakhir REJECTED -->
-    <div th:if="${canEdit}">
-        <form th:action="@{/dashboard/upload/edit}" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="id" th:value="${document.id}">
-            <label>NIK:</label>
-            <input type="text" name="nik" th:value="${document.nik}" required /><br />
-            <label>Nama:</label>
-            <input type="text" name="nama" th:value="${document.nama}" required /><br />
-            <label>Tempat Lahir:</label>
-            <input type="text" name="tempatLahir" th:value="${document.tempatLahir}" required /><br />
-            <label>Tanggal Lahir:</label>
-            <input type="date" name="tanggalLahir" th:value="${document.tanggalLahir}" required /><br />
-            <label>Jenis Kelamin:</label>
-            <select name="jenisKelamin" required>
-                <option value="LAKI_LAKI" th:selected="${document.jenisKelamin?.name() == 'LAKI_LAKI'}">Laki-laki
-                </option>
-                <option value="PEREMPUAN" th:selected="${document.jenisKelamin?.name() == 'PEREMPUAN'}">Perempuan
-                </option>
-            </select><br />
-            <label>Alamat:</label>
-            <input type="text" name="alamat" th:value="${document.alamat}" required /><br />
-            <label>RT/RW:</label>
-            <input type="text" name="rtRw" th:value="${document.rtRw}" required /><br />
-            <label>Kel/Desa:</label>
-            <input type="text" name="kelDesa" th:value="${document.kelDesa}" required /><br />
-            <label>Kecamatan:</label>
-            <input type="text" name="kecamatan" th:value="${document.kecamatan}" required /><br />
-            <label>Agama:</label>
-            <input type="text" name="agama" th:value="${document.agama}" required /><br />
-            <label>Status Perkawinan:</label>
-            <input type="text" name="statusPerkawinan" th:value="${document.statusPerkawinan}" required /><br />
-            <label>Pekerjaan:</label>
-            <input type="text" name="pekerjaan" th:value="${document.pekerjaan}" required /><br />
-            <label>Kewarganegaraan:</label>
-            <input type="text" name="kewarganegaraan" th:value="${document.kewarganegaraan}" required /><br />
-            <label>Golongan Darah:</label>
-            <input type="text" name="golDarah" th:value="${document.golDarah}" required /><br />
-            <label>Foto KTP:</label>
-            <input type="file" name="fotoKtp" accept="image/*"><br />
-            <label>Foto Selfie dengan KTP:</label>
-            <input type="file" name="fotoSelfie" accept="image/*"><br />
-            <button type="submit">Simpan Perubahan</button>
-        </form>
-    </div>
 
-    <!-- Info jika tidak bisa upload/edit -->
-    <div th:if="${!canUpload and !canEdit}">
-        <b style="color:orange;">Anda tidak dapat upload atau edit dokumen saat status masih <span
-                th:text="${documents[documents.size()-1].status}"></span>.</b>
-        <span th:if="${documents[documents.size()-1].status.name() == 'PENDING'}">Menunggu verifikasi admin.</span>
-        <span th:if="${documents[documents.size()-1].status.name() == 'VERIFIED'}">Dokumen sudah
-            diverifikasi.</span>
+<main class="max-w-3xl mx-auto py-6 px-4 sm:px-6">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Verifikasi Dokumen</h1>
+            <p class="text-sm text-gray-600 mt-1">Lengkapi data diri Anda untuk verifikasi akun</p>
+        </div>
+
+        <!-- Upload Form -->
+        <div th:if="${canUpload}" class="verification-card p-8">
+            <form th:action="@{/dashboard/upload}" method="post" enctype="multipart/form-data" class="space-y-6">
+                <!-- Personal Information Section -->
+                <div class="form-section">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Pribadi</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">NIK</label>
+                            <input type="text" name="nik" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" name="nama" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Tempat Lahir</label>
+                            <input type="text" name="tempatLahir" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Tanggal Lahir</label>
+                            <input type="date" name="tanggalLahir" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Jenis Kelamin</label>
+                            <select name="jenisKelamin" required class="form-input">
+                                <option value="LAKI_LAKI">Laki-laki</option>
+                                <option value="PEREMPUAN">Perempuan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Golongan Darah</label>
+                            <input type="text" name="golDarah" required class="form-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Section -->
+                <div class="form-section">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Alamat</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">Alamat Lengkap</label>
+                            <input type="text" name="alamat" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">RT/RW</label>
+                            <input type="text" name="rtRw" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Kelurahan/Desa</label>
+                            <input type="text" name="kelDesa" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Kecamatan</label>
+                            <input type="text" name="kecamatan" required class="form-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information Section -->
+                <div class="form-section">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Tambahan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">Agama</label>
+                            <input type="text" name="agama" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Status Perkawinan</label>
+                            <input type="text" name="statusPerkawinan" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Pekerjaan</label>
+                            <input type="text" name="pekerjaan" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Kewarganegaraan</label>
+                            <input type="text" name="kewarganegaraan" required class="form-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Upload Section -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Upload Dokumen</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">Foto KTP</label>
+                            <input type="file" name="fotoKtp" accept="image/*" required class="form-input">
+                            <div class="photo-preview text-center">
+                                <i class="fas fa-id-card text-gray-400 text-4xl mb-2"></i>
+                                <p class="text-sm text-gray-500">Upload foto KTP Anda</p>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Foto Selfie dengan KTP</label>
+                            <input type="file" name="fotoSelfie" accept="image/*" required class="form-input">
+                            <div class="photo-preview text-center">
+                                <i class="fas fa-user text-gray-400 text-4xl mb-2"></i>
+                                <p class="text-sm text-gray-500">Upload selfie dengan KTP</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="submit-btn w-full">
+                        <i class="fas fa-upload mr-2"></i> Upload Dokumen
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Edit Form -->
+        <div th:if="${canEdit}" class="verification-card p-8">
+            <form th:action="@{/dashboard/upload/edit}" method="post" enctype="multipart/form-data" class="space-y-6">
+                <input type="hidden" name="id" th:value="${document.id}">
+                
+                <!-- Personal Information Section -->
+                <div class="form-section">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Pribadi</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">NIK</label>
+                            <input type="text" name="nik" th:value="${document.nik}" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" name="nama" th:value="${document.nama}" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Tempat Lahir</label>
+                            <input type="text" name="tempatLahir" th:value="${document.tempatLahir}" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Tanggal Lahir</label>
+                            <input type="date" name="tanggalLahir" th:value="${document.tanggalLahir}" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Jenis Kelamin</label>
+                            <select name="jenisKelamin" required class="form-input">
+                                <option value="LAKI_LAKI" th:selected="${document.jenisKelamin?.name() == 'LAKI_LAKI'}">Laki-laki</option>
+                                <option value="PEREMPUAN" th:selected="${document.jenisKelamin?.name() == 'PEREMPUAN'}">Perempuan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Golongan Darah</label>
+                            <input type="text" name="golDarah" th:value="${document.golDarah}" required class="form-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Section -->
+                <div class="form-section">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Alamat</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">Alamat Lengkap</label>
+                            <input type="text" name="alamat" th:value="${document.alamat}" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">RT/RW</label>
+                            <input type="text" name="rtRw" th:value="${document.rtRw}" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Kelurahan/Desa</label>
+                            <input type="text" name="kelDesa" th:value="${document.kelDesa}" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Kecamatan</label>
+                            <input type="text" name="kecamatan" th:value="${document.kecamatan}" required class="form-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information Section -->
+                <div class="form-section">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Tambahan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">Agama</label>
+                            <input type="text" name="agama" th:value="${document.agama}" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Status Perkawinan</label>
+                            <input type="text" name="statusPerkawinan" th:value="${document.statusPerkawinan}" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Pekerjaan</label>
+                            <input type="text" name="pekerjaan" th:value="${document.pekerjaan}" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Kewarganegaraan</label>
+                            <input type="text" name="kewarganegaraan" th:value="${document.kewarganegaraan}" required class="form-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Upload Section -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Dokumen Saat Ini</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">Foto KTP</label>
+                            <input type="file" name="fotoKtp" accept="image/*" class="form-input">
+                            <div th:if="${document.fotoKtp}" class="mt-2">
+                                <img th:src="@{'/uploads/' + ${document.fotoKtp}}" alt="Foto KTP" class="rounded-lg w-full max-w-xs border border-gray-200">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Foto Selfie dengan KTP</label>
+                            <input type="file" name="fotoSelfie" accept="image/*" class="form-input">
+                            <div th:if="${document.fotoSelfie}" class="mt-2">
+                                <img th:src="@{'/uploads/' + ${document.fotoSelfie}}" alt="Foto Selfie" class="rounded-lg w-full max-w-xs border border-gray-200">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="submit-btn w-full">
+                        <i class="fas fa-save mr-2"></i> Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- View Only (Pending/Verified) -->
+        <div th:if="${!canUpload and !canEdit and documents.size() > 0}" class="verification-card p-8">
+            <div class="space-y-6">
+                <!-- Status Banner -->
+                <div th:if="${documents[documents.size()-1].status.name() == 'PENDING'}" 
+                     class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-clock text-amber-500 mt-0.5 mr-3"></i>
+                        <div>
+                            <h4 class="text-sm font-medium text-amber-800">Verifikasi Dokumen</h4>
+                            <p class="text-sm text-amber-700 mt-1">Dokumen Anda sedang dalam proses verifikasi oleh tim kami.</p>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${documents[documents.size()-1].status.name() == 'VERIFIED'}" 
+                     class="bg-green-50 border-l-4 border-green-400 p-4 rounded-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mt-0.5 mr-3"></i>
+                        <div>
+                            <h4 class="text-sm font-medium text-green-800">Dokumen Terverifikasi</h4>
+                            <p class="text-sm text-green-700 mt-1">Dokumen Anda telah diverifikasi dan akun Anda aktif.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Details -->
+                <div class="form-section">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Pribadi</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">NIK</label>
+                            <input type="text" th:value="${documents[documents.size()-1].nik}" class="form-input bg-gray-50" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" th:value="${documents[documents.size()-1].nama}" class="form-input bg-gray-50" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label">Tempat Lahir</label>
+                            <input type="text" th:value="${documents[documents.size()-1].tempatLahir}" class="form-input bg-gray-50" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label">Tanggal Lahir</label>
+                            <input type="text" th:value="${documents[documents.size()-1].tanggalLahir}" class="form-input bg-gray-50" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label">Jenis Kelamin</label>
+                            <input type="text" th:value="${documents[documents.size()-1].jenisKelamin}" class="form-input bg-gray-50" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label">Golongan Darah</label>
+                            <input type="text" th:value="${documents[documents.size()-1].golDarah}" class="form-input bg-gray-50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Alamat</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">Alamat Lengkap</label>
+                            <input type="text" th:value="${documents[documents.size()-1].alamat}" class="form-input bg-gray-50" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label">RT/RW</label>
+                            <input type="text" th:value="${documents[documents.size()-1].rtRw}" class="form-input bg-gray-50" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label">Kelurahan/Desa</label>
+                            <input type="text" th:value="${documents[documents.size()-1].kelDesa}" class="form-input bg-gray-50" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label">Kecamatan</label>
+                            <input type="text" th:value="${documents[documents.size()-1].kecamatan}" class="form-input bg-gray-50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Tambahan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">Agama</label>
+                            <input type="text" th:value="${documents[documents.size()-1].agama}" class="form-input bg-gray-50" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label">Status Perkawinan</label>
+                            <input type="text" th:value="${documents[documents.size()-1].statusPerkawinan}" class="form-input bg-gray-50" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label">Pekerjaan</label>
+                            <input type="text" th:value="${documents[documents.size()-1].pekerjaan}" class="form-input bg-gray-50" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label">Kewarganegaraan</label>
+                            <input type="text" th:value="${documents[documents.size()-1].kewarganegaraan}" class="form-input bg-gray-50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Dokumen</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label">Foto KTP</label>
+                            <div th:if="${documents[documents.size()-1].fotoKtp}" class="mt-2">
+                                <img th:src="@{'/uploads/' + ${documents[documents.size()-1].fotoKtp}}" alt="Foto KTP" class="rounded-lg w-full max-w-xs border border-gray-200">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Foto Selfie dengan KTP</label>
+                            <div th:if="${documents[documents.size()-1].fotoSelfie}" class="mt-2">
+                                <img th:src="@{'/uploads/' + ${documents[documents.size()-1].fotoSelfie}}" alt="Foto Selfie" class="rounded-lg w-full max-w-xs border border-gray-200">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Link -->
+        <div class="mt-6">
+            <a href="/dashboard" class="back-link inline-flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i>
+                <span>Kembali ke Dashboard</span>
+            </a>
+        </div>
     </div>
-
-    <a href="/dashboard">Kembali ke Dashboard</a>
-    <table border="1" cellpadding="5">
-        <tr>
-            <th>NIK</th>
-            <th>Nama</th>
-            <th>Tempat/Tgl Lahir</th>
-            <th>Jenis Kelamin</th>
-            <th>Alamat</th>
-            <th>RT/RW</th>
-            <th>Kel/Desa</th>
-            <th>Kecamatan</th>
-            <th>Agama</th>
-            <th>Status Perkawinan</th>
-            <th>Pekerjaan</th>
-            <th>Kewarganegaraan</th>
-            <th>Gol. Darah</th>
-            <th>Foto KTP</th>
-            <th>Foto Selfie</th>
-            <th>Status</th>
-            <th>Waktu Upload</th>
-        </tr>
-        <tr th:each="doc : ${documents}">
-            <td th:text="${doc.nik}"></td>
-            <td th:text="${doc.nama}"></td>
-            <td>
-                <span th:text="${doc.tempatLahir}"></span>/<span th:text="${doc.tanggalLahir}"></span>
-            </td>
-            <td th:text="${doc.jenisKelamin}"></td>
-            <td th:text="${doc.alamat}"></td>
-            <td th:text="${doc.rtRw}"></td>
-            <td th:text="${doc.kelDesa}"></td>
-            <td th:text="${doc.kecamatan}"></td>
-            <td th:text="${doc.agama}"></td>
-            <td th:text="${doc.statusPerkawinan}"></td>
-            <td th:text="${doc.pekerjaan}"></td>
-            <td th:text="${doc.kewarganegaraan}"></td>
-            <td th:text="${doc.golDarah}"></td>
-            <td>
-                <img th:src="@{'/uploads/' + ${doc.fotoKtp}}" alt="Foto KTP" width="100" />
-            </td>
-            <td>
-                <img th:src="@{'/uploads/' + ${doc.fotoSelfie}}" alt="Foto Selfie" width="100" />
-            </td>
-            <td th:text="${doc.status}"></td>
-            <td th:text="${#temporals.format(doc.uploadedAt, 'yyyy-MM-dd HH:mm')}"></td>
-        </tr>
-    </table>
-
 </main>
-
 </html>

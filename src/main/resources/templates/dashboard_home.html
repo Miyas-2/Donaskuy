@@ -3,129 +3,167 @@
 
 <head>
     <title>Dashboard - Donaskuy SDGS</title>
+    <style>
+        .category-pill {
+            transition: all 0.2s ease;
+        }
+        .category-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .program-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .program-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #0d9488, #14b8a6);
+            border-radius: 3px;
+        }
+        .empty-state-icon {
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 
-<body>
-    <main>
-        <!-- Header with SDGS theme -->
-        <div class="flex justify-between items-center mb-8">
+<main class="max-w-7xl mx-auto py-6 px-4 sm:px-6">
+    <!-- Header with gradient border -->
+    <div class="pb-6 mb-6 border-b-2 border-transparent bg-gradient-to-r from-white via-white to-white">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-semibold text-sdgs-green">Program Donasi Berkelanjutan</h2>
-                <p class="text-sm text-gray-500">Berkontribusi untuk tujuan pembangunan berkelanjutan</p>
+                <h1 class="text-2xl font-bold text-gray-900">Program Donasi</h1>
+                <p class="text-sm text-gray-600 mt-1">Kelola program donasi untuk mendukung Tujuan Pembangunan Berkelanjutan (SDGs)</p>
             </div>
-            <div th:if="${user.photo != null}" class="relative">
-                <img th:src="@{'/uploads/' + ${user.photo}}" alt="Foto Profil"
-                    class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-md">
-                <div
-                    class="absolute -bottom-1 -right-1 w-5 h-5 bg-sdgs-teal rounded-full flex items-center justify-center text-white text-xs">
-                    <i class="fas fa-leaf"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- SDGS Category Filters -->
-        <div class="flex flex-wrap gap-3 mb-6">
-            <button class="px-4 py-2 bg-sdgs-green text-white rounded-full text-sm flex items-center">
-                <i class="fas fa-globe-asia mr-2"></i> Semua Program
-            </button>
-            <button
-                class="px-4 py-2 bg-gray-100 hover:bg-earth-green/10 text-earth-green rounded-full text-sm flex items-center">
-                <i class="fas fa-tree mr-2"></i> Lingkungan
-            </button>
-            <button
-                class="px-4 py-2 bg-gray-100 hover:bg-social-blue/10 text-social-blue rounded-full text-sm flex items-center">
-                <i class="fas fa-hands-helping mr-2"></i> Sosial
-            </button>
-            <button
-                class="px-4 py-2 bg-gray-100 hover:bg-sdgs-orange/10 text-sdgs-orange rounded-full text-sm flex items-center">
-                <i class="fas fa-heart mr-2"></i> Kemanusiaan
-            </button>
-        </div>
-
-        <!-- Program Cards Grid -->
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <div th:each="prog : ${programs}"
-                class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-lg transition-all duration-300">
-                <!-- SDGS Category Badge -->
-                <div class="absolute top-3 left-3">
-                    <span th:if="${prog.category == 'environment'}"
-                        class="px-3 py-1 bg-earth-green/10 text-earth-green text-xs font-medium rounded-full flex items-center">
-                        <i class="fas fa-tree mr-1"></i> Lingkungan
-                    </span>
-                    <span th:if="${prog.category == 'social'}"
-                        class="px-3 py-1 bg-social-blue/10 text-social-blue text-xs font-medium rounded-full flex items-center">
-                        <i class="fas fa-hands-helping mr-1"></i> Sosial
-                    </span>
-                </div>
-
-                <!-- Program Image -->
-                <div class="h-48 overflow-hidden">
-                    <img th:if="${prog.photo}" th:src="@{'/uploads/' + ${prog.photo}}"
-                        class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                    <div th:unless="${prog.photo}"
-                        class="w-full h-full bg-sdgs-teal/10 flex items-center justify-center text-sdgs-teal">
-                        <i class="fas fa-hand-holding-heart text-4xl"></i>
-                    </div>
-                </div>
-
-                <!-- Program Content -->
-                <div class="p-5">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2" th:text="${prog.title}"></h3>
-                    <p class="text-gray-600 text-sm mb-4 line-clamp-2" th:text="${prog.description}"></p>
-
-                    <!-- Progress Section -->
-                    <div class="mb-4">
-                        <div class="flex justify-between text-xs text-gray-500 mb-1">
-                            <span>Terkumpul</span>
-                            <span
-                                th:text="${#numbers.formatDecimal((prog.collectedAmount ?: 0) / prog.targetAmount * 100, 1, 2)} + '%'"></span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-sdgs-green h-2 rounded-full"
-                                th:style="'width: ' + ${(prog.collectedAmount ?: 0 / prog.targetAmount * 100)} + '%;'">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Donation Info -->
-                    <div class="grid grid-cols-2 gap-3 mb-5">
-                        <div class="bg-gray-50 p-3 rounded-lg">
-                            <p class="text-xs text-gray-500">Target Donasi</p>
-                            <p class="font-medium text-sdgs-green">Rp<span
-                                    th:text="${#numbers.formatDecimal(prog.targetAmount, 1, 'POINT', 2, 'COMMA')}"></span>
-                            </p>
-                        </div>
-                        <div class="bg-gray-50 p-3 rounded-lg">
-                            <p class="text-xs text-gray-500">Terkumpul</p>
-                            <p class="font-medium text-sdgs-teal">Rp<span
-                                    th:text="${#numbers.formatDecimal(prog.collectedAmount ?: 0, 1, 'POINT', 2, 'COMMA')}"></span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Action Button -->
-                    <a th:href="@{'/dashboard/program/' + ${prog.id}}"
-                        class="w-full block text-center sdgs-gradient-bg hover:opacity-90 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center">
-                        <i class="fas fa-donate mr-2"></i> Dukung Sekarang
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Empty State -->
-        <div th:unless="${programs.size() > 0}" class="text-center py-12">
-            <div
-                class="mx-auto w-24 h-24 bg-sdgs-green/10 rounded-full flex items-center justify-center text-sdgs-green mb-4">
-                <i class="fas fa-inbox text-3xl"></i>
-            </div>
-            <h3 class="text-lg font-medium text-gray-800 mb-2">Belum ada program donasi</h3>
-            <p class="text-gray-500 mb-4">Mulai buat program donasi pertama Anda untuk mendukung SDGS</p>
-            <a href="/dashboard/program/add"
-                class="inline-flex items-center px-4 py-2 sdgs-gradient-bg text-white rounded-lg text-sm">
+            <a href="/dashboard/program/add" class="inline-flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 shadow-md transition-all duration-200">
                 <i class="fas fa-plus mr-2"></i> Buat Program Baru
             </a>
         </div>
-    </main>
-</body>
+    </div>
 
-</html>
+    <!-- Category Filters -->
+    <div class="mb-8">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Filter Kategori</h3>
+        <div class="flex flex-wrap gap-2">
+            <a href="/dashboard" class="category-pill px-4 py-2 text-sm font-medium rounded-full"
+                th:classappend="${selectedCategoryId == null ? 'text-white bg-gradient-to-r from-primary-600 to-primary-500 shadow-md' : 'text-gray-700 bg-white border border-gray-200 hover:border-primary-300'}">
+                Semua Kategori
+            </a>
+            <a th:each="cat, catStat : ${categories}" th:href="@{/dashboard(categoryId=${cat.id})}"
+                class="category-pill px-4 py-2 text-sm font-medium rounded-full border"
+                th:classappend="${cat.id == selectedCategoryId ? 
+                    (cat.name == 'Lingkungan' ? 'text-white bg-gradient-to-r from-green-600 to-green-500 shadow-md border-transparent' : 
+                     cat.name == 'Sosial' ? 'text-white bg-gradient-to-r from-blue-600 to-blue-500 shadow-md border-transparent' : 
+                     'text-white bg-gradient-to-r from-primary-600 to-primary-500 shadow-md border-transparent') 
+                    : 'text-gray-700 bg-white border-gray-200 hover:border-primary-300'}">
+                <i th:classappend="${cat.name == 'Lingkungan' ? 'fas fa-leaf mr-1.5' : 
+                                  cat.name == 'Sosial' ? 'fas fa-hands-helping mr-1.5' : 
+                                  'fas fa-tag mr-1.5'}"></i>
+                <span th:text="${cat.name}"></span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Program Cards -->
+    <div th:if="${programs.size() > 0}" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div th:each="prog : ${programs}" class="program-card bg-white border border-gray-200 hover:border-primary-100">
+            <!-- Program Image with SDG badge -->
+            <div class="relative aspect-video">
+                <img th:if="${prog.photo}" th:src="@{'/uploads/' + ${prog.photo}}"
+                    class="w-full h-full object-cover">
+                <div th:unless="${prog.photo}" class="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+                    <i class="fas fa-image text-gray-300 text-3xl"></i>
+                </div>
+                <div class="absolute top-3 right-3 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center">
+                    <img src="https://sdgs.un.org/themes/custom/undg/images/SDG-wheel-1.png" alt="SDG" class="w-6 h-6">
+                </div>
+            </div>
+
+            <div class="p-5">
+                <!-- Category and Status -->
+                <div class="flex justify-between items-center mb-3">
+                    <span th:if="${prog.category != null}"
+                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                        th:classappend="${prog.category.name == 'Lingkungan' ? 'bg-green-50 text-green-700' : 
+                                      prog.category.name == 'Sosial' ? 'bg-blue-50 text-blue-700' : 
+                                      'bg-gray-50 text-gray-700'}">
+                        <i th:classappend="${prog.category.name == 'Lingkungan' ? 'fas fa-leaf mr-1.5' : 
+                                          prog.category.name == 'Sosial' ? 'fas fa-hands-helping mr-1.5' : 
+                                          'fas fa-tag mr-1.5'}"></i>
+                        <span th:text="${prog.category.name}"></span>
+                    </span>
+                    <span class="text-xs font-medium px-2 py-1 rounded"
+                        th:classappend="${(prog.collectedAmount ?: 0) >= prog.targetAmount ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'}">
+                        <span th:text="${(prog.collectedAmount ?: 0) >= prog.targetAmount ? 'Tercapai' : 'Berjalan'}"></span>
+                    </span>
+                </div>
+
+                <!-- Title and Description -->
+                <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-1" th:text="${prog.title}"></h3>
+                <p class="text-sm text-gray-600 mb-4 line-clamp-2" th:text="${prog.description}"></p>
+
+                <!-- Progress Bar -->
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Terkumpul</span>
+                        <span th:text="${#numbers.formatDecimal((prog.collectedAmount ?: 0) / prog.targetAmount * 100, 1, 2)} + '%'"></span>
+                    </div>
+                    <div class="progress-bar w-full bg-gray-100">
+                        <div class="progress-fill h-full"
+                            th:style="'width: ' + ${#numbers.formatInteger(((prog.collectedAmount ?: 0) / prog.targetAmount * 100 < 100) ? ((prog.collectedAmount ?: 0) / prog.targetAmount * 100) : 100, 1)} + '%'">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Amount Info -->
+                <div class="grid grid-cols-2 gap-3 mb-5">
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <p class="text-xs text-gray-500 mb-1">Target</p>
+                        <p class="text-sm font-semibold text-gray-900">Rp<span
+                                th:text="${#numbers.formatDecimal(prog.targetAmount, 1, 'POINT', 2, 'COMMA')}"></span></p>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <p class="text-xs text-gray-500 mb-1">Terkumpul</p>
+                        <p class="text-sm font-semibold text-gray-900">Rp<span
+                                th:text="${#numbers.formatDecimal(prog.collectedAmount ?: 0, 1, 'POINT', 2, 'COMMA')}"></span></p>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <a th:href="@{'/dashboard/program/' + ${prog.id}}"
+                    class="w-full inline-flex justify-center items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 shadow-md transition-all duration-200">
+                    <i class="fas fa-eye mr-2"></i> Lihat Detail
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div th:unless="${programs.size() > 0}" class="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
+        <div class="empty-state-icon">
+            <i class="fas fa-inbox text-3xl text-primary-600"></i>
+        </div>
+        <h3 class="mt-4 text-lg font-medium text-gray-900">Belum ada program donasi</h3>
+        <p class="mt-2 text-sm text-gray-600 max-w-md mx-auto">Mulai kampanye donasi Anda untuk mendukung Tujuan Pembangunan Berkelanjutan (SDGs)</p>
+        <div class="mt-6">
+            <a href="/dashboard/program/add"
+                class="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-lg text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 shadow-md transition-all duration-200">
+                <i class="fas fa-plus mr-2"></i> Buat Program Baru
+            </a>
+        </div>
+    </div>
+</main>

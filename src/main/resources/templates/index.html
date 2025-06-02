@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donaskuy | Berdonasi untuk SDGs Sosial & Lingkungan</title>
+    <title>Donaskuy SDGS | Platform Donasi untuk Pembangunan Berkelanjutan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,232 +13,315 @@
             background-color: #f8fafc;
         }
         .hero-gradient {
-            background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+        }
+        .sdg-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
         .sdg-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
         }
-        .impact-card {
+        .nav-link {
+            position: relative;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #0d9488;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #0d9488 0%, #14b8a6 100%);
             transition: all 0.3s ease;
         }
-        .impact-card:hover {
-            transform: scale(1.03);
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+        }
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
         }
     </style>
 </head>
-<body>
+<body class="text-gray-800">
     <!-- Navigation -->
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center">
-                        <i class="fas fa-hands-helping text-3xl text-emerald-600 mr-2"></i>
-                        <span class="text-xl font-bold text-gray-800">DONASKUY</span>
-                    </div>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-center space-x-8">
-                        <a href="#" class="text-gray-800 hover:text-emerald-600 px-3 py-2 font-medium">Beranda</a>
-                        <a href="#" class="text-gray-800 hover:text-emerald-600 px-3 py-2 font-medium">Program</a>
-                        <a href="#" class="text-gray-800 hover:text-emerald-600 px-3 py-2 font-medium">Tentang Kami</a>
-                        <a href="#" class="text-gray-800 hover:text-emerald-600 px-3 py-2 font-medium">Dampak</a>
-                        <a href="/register" class="bg-emerald-600 text-white px-6 py-2 rounded-full font-medium hover:bg-emerald-700 transition duration-300">Daftar Sekarang</a>
-                    </div>
-                </div>
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-lg bg-primary-600 flex items-center justify-center text-white">
+                <i class="fas fa-hand-holding-heart"></i>
             </div>
+            <span class="text-xl font-bold text-gray-800">DONASKUY</span>
+        </div>
+        <div class="hidden md:flex space-x-8">
+            <a href="#tentang" class="nav-link">Tentang</a>
+            <a href="#program" class="nav-link">Program</a>
+            <a href="#dampak" class="nav-link">Dampak</a>
+            <a href="#kontak" class="nav-link">Kontak</a>
+        </div>
+        <div class="flex space-x-4">
+            <a href="/login" class="px-4 py-2 text-primary-600 font-medium">Masuk</a>
+            <a href="/register" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">Daftar</a>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-gradient text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-            <div class="md:flex items-center justify-between">
-                <div class="md:w-1/2 mb-12 md:mb-0">
-                    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">Bersama Wujudkan Masa Depan Berkelanjutan</h1>
-                    <p class="text-xl mb-8 opacity-90">Donaskuy menghubungkan Anda dengan program-program sosial dan lingkungan yang mendukung Tujuan Pembangunan Berkelanjutan (SDGs) PBB.</p>
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <a href="/register" class="bg-white text-emerald-600 px-8 py-3 rounded-full font-bold text-center hover:bg-gray-100 transition duration-300">Mulai Berdonasi</a>
-                        <a href="#" class="border-2 border-white text-white px-8 py-3 rounded-full font-bold text-center hover:bg-white hover:text-emerald-600 transition duration-300">Pelajari SDGs</a>
-                    </div>
+    <section class="hero-gradient">
+        <div class="container mx-auto px-6 py-20 md:py-32 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-12 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
+                    Berdonasi untuk Masa Depan <span class="text-primary-600">Berkelanjutan</span>
+                </h1>
+                <p class="text-lg text-gray-600 mb-8 max-w-lg">
+                    Bergabung dengan ribuan orang yang telah berkontribusi untuk mencapai Tujuan Pembangunan Berkelanjutan PBB.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="/register" class="btn-primary px-8 py-3 rounded-lg text-white font-medium">
+                        Mulai Donasi <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="#program" class="px-8 py-3 border border-primary-600 text-primary-600 rounded-lg font-medium hover:bg-primary-50">
+                        Jelajahi Program
+                    </a>
                 </div>
-                <div class="md:w-1/2 flex justify-center">
-                    <img src="https://illustrations.popsy.co/amber/reaching-goals.svg" alt="SDGs Illustration" class="w-full max-w-md">
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <img src="https://illustrations.popsy.co/amber/earth-day.svg" alt="Sustainable Development" class="w-full max-w-md floating">
+            </div>
+        </div>
+    </section>
+
+    <!-- SDG Badges -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-wrap justify-center gap-4">
+                <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center">
+                    <img src="https://sdgs.un.org/themes/custom/undg/images/SDG-01.png" alt="SDG 1" class="w-12">
+                </div>
+                <div class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center">
+                    <img src="https://sdgs.un.org/themes/custom/undg/images/SDG-02.png" alt="SDG 2" class="w-12">
+                </div>
+                <div class="w-16 h-16 rounded-full bg-yellow-50 flex items-center justify-center">
+                    <img src="https://sdgs.un.org/themes/custom/undg/images/SDG-03.png" alt="SDG 3" class="w-12">
+                </div>
+                <div class="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
+                    <img src="https://sdgs.un.org/themes/custom/undg/images/SDG-04.png" alt="SDG 4" class="w-12">
+                </div>
+                <div class="w-16 h-16 rounded-full bg-orange-50 flex items-center justify-center">
+                    <img src="https://sdgs.un.org/themes/custom/undg/images/SDG-05.png" alt="SDG 5" class="w-12">
+                </div>
+                <div class="w-16 h-16 rounded-full bg-teal-50 flex items-center justify-center">
+                    <img src="https://sdgs.un.org/themes/custom/undg/images/SDG-06.png" alt="SDG 6" class="w-12">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SDGs Focus Section -->
-    <section class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- About Section -->
+    <section id="tentang" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">Fokus Pada SDGs Sosial & Lingkungan</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Kami berkomitmen mendukung 8 dari 17 Tujuan Pembangunan Berkelanjutan PBB</p>
+                <h2 class="text-3xl font-bold mb-4">Mengapa Memilih Donaskuy?</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Platform donasi pertama di Indonesia yang fokus sepenuhnya pada pencapaian SDGs PBB</p>
             </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <!-- SDG 1 -->
-                <div class="sdg-card bg-red-50 rounded-xl p-6 text-center transition duration-300">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl text-red-600">1</span>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="sdg-card bg-white p-8 rounded-xl">
+                    <div class="w-14 h-14 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-xl"></i>
                     </div>
-                    <h3 class="font-bold text-gray-800 mb-2">Tanpa Kemiskinan</h3>
-                    <p class="text-sm text-gray-600">Mengentaskan kemiskinan dalam segala bentuk</p>
+                    <h3 class="text-xl font-semibold mb-3">Transparansi 100%</h3>
+                    <p class="text-gray-600">Setiap rupiah yang Anda donasikan dapat dilacak hingga ke penerima manfaat.</p>
                 </div>
-                
-                <!-- SDG 2 -->
-                <div class="sdg-card bg-orange-50 rounded-xl p-6 text-center transition duration-300">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl text-orange-600">2</span>
+                <div class="sdg-card bg-white p-8 rounded-xl">
+                    <div class="w-14 h-14 rounded-lg bg-green-50 text-green-600 flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-line text-xl"></i>
                     </div>
-                    <h3 class="font-bold text-gray-800 mb-2">Tanpa Kelaparan</h3>
-                    <p class="text-sm text-gray-600">Mengakhiri kelaparan dan segala bentuk malnutrisi</p>
+                    <h3 class="text-xl font-semibold mb-3">Dampak Terukur</h3>
+                    <p class="text-gray-600">Laporan dampak rutin menunjukkan perubahan nyata yang Anda bantu ciptakan.</p>
                 </div>
-                
-                <!-- SDG 3 -->
-                <div class="sdg-card bg-green-50 rounded-xl p-6 text-center transition duration-300">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl text-green-600">3</span>
+                <div class="sdg-card bg-white p-8 rounded-xl">
+                    <div class="w-14 h-14 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-6">
+                        <i class="fas fa-globe-asia text-xl"></i>
                     </div>
-                    <h3 class="font-bold text-gray-800 mb-2">Kesehatan Baik</h3>
-                    <p class="text-sm text-gray-600">Memastikan hidup sehat dan sejahtera</p>
+                    <h3 class="text-xl font-semibold mb-3">Fokus SDGs</h3>
+                    <p class="text-gray-600">Program-program yang selaras dengan Tujuan Pembangunan Berkelanjutan PBB.</p>
                 </div>
-                
-                <!-- SDG 4 -->
-                <div class="sdg-card bg-blue-50 rounded-xl p-6 text-center transition duration-300">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl text-blue-600">4</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Section -->
+    <section id="program" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Program Unggulan</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Pilih program yang sesuai dengan passion Anda untuk berdonasi</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="sdg-card bg-white border border-gray-100 rounded-xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Lingkungan" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Lingkungan</span>
+                            <span class="ml-auto text-sm text-gray-500">2,345 Donatur</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Penghijauan Kota</h3>
+                        <p class="text-gray-600 mb-4">Menanam 10,000 pohon di area perkotaan untuk mengurangi polusi udara.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary-600 font-medium">Rp 1,2M terkumpul</span>
+                            <a href="#" class="text-primary-600 hover:underline">Selengkapnya →</a>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-gray-800 mb-2">Pendidikan Berkualitas</h3>
-                    <p class="text-sm text-gray-600">Pendidikan inklusif dan merata</p>
                 </div>
-                
-                <!-- SDG 6 -->
-                <div class="sdg-card bg-cyan-50 rounded-xl p-6 text-center transition duration-300">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-cyan-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl text-cyan-600">6</span>
+                <div class="sdg-card bg-white border border-gray-100 rounded-xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Pendidikan" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Pendidikan</span>
+                            <span class="ml-auto text-sm text-gray-500">3,456 Donatur</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Beasiswa Anak Prasejahtera</h3>
+                        <p class="text-gray-600 mb-4">Mendukung pendidikan 500 anak dari keluarga kurang mampu.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary-600 font-medium">Rp 850jt terkumpul</span>
+                            <a href="#" class="text-primary-600 hover:underline">Selengkapnya →</a>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-gray-800 mb-2">Air Bersih</h3>
-                    <p class="text-sm text-gray-600">Ketersediaan air bersih dan sanitasi</p>
                 </div>
-                
-                <!-- SDG 7 -->
-                <div class="sdg-card bg-yellow-50 rounded-xl p-6 text-center transition duration-300">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl text-yellow-600">7</span>
+                <div class="sdg-card bg-white border border-gray-100 rounded-xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Kesehatan" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">Kesehatan</span>
+                            <span class="ml-auto text-sm text-gray-500">1,789 Donatur</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Bantuan Medis Pedesaan</h3>
+                        <p class="text-gray-600 mb-4">Memberikan akses kesehatan dasar untuk 50 desa terpencil.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary-600 font-medium">Rp 650jt terkumpul</span>
+                            <a href="#" class="text-primary-600 hover:underline">Selengkapnya →</a>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-gray-800 mb-2">Energi Bersih</h3>
-                    <p class="text-sm text-gray-600">Energi terjangkau dan berkelanjutan</p>
                 </div>
-                
-                <!-- SDG 13 -->
-                <div class="sdg-card bg-teal-50 rounded-xl p-6 text-center transition duration-300">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-teal-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl text-teal-600">13</span>
-                    </div>
-                    <h3 class="font-bold text-gray-800 mb-2">Perubahan Iklim</h3>
-                    <p class="text-sm text-gray-600">Penanganan perubahan iklim dan dampaknya</p>
-                </div>
-                
-                <!-- SDG 15 -->
-                <div class="sdg-card bg-lime-50 rounded-xl p-6 text-center transition duration-300">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-lime-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl text-lime-600">15</span>
-                    </div>
-                    <h3 class="font-bold text-gray-800 mb-2">Ekosistem Darat</h3>
-                    <p class="text-sm text-gray-600">Menjaga ekosistem darat yang berkelanjutan</p>
-                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="/program" class="btn-primary inline-flex items-center px-8 py-3 rounded-lg text-white font-medium">
+                    Lihat Semua Program <i class="fas fa-arrow-right ml-2"></i>
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Impact Section -->
-    <section class="py-16 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="dampak" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">Dampak Nyata Donasi Anda</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Bersama-sama kami telah menciptakan perubahan yang berarti</p>
+                <h2 class="text-3xl font-bold mb-4">Dampak Nyata</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Bersama-sama kita telah menciptakan perubahan</p>
             </div>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="impact-card bg-white p-8 rounded-xl shadow-md text-center">
-                    <div class="text-5xl font-bold text-emerald-600 mb-4">12.458</div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Pohon Ditanam</h3>
-                    <p class="text-gray-600">Mendukung restorasi ekosistem di 5 wilayah Indonesia</p>
-                    <div class="mt-4">
-                        <i class="fas fa-tree text-3xl text-green-500"></i>
-                    </div>
+            <div class="grid md:grid-cols-4 gap-8 text-center">
+                <div class="bg-white p-6 rounded-xl">
+                    <div class="text-4xl font-bold text-primary-600 mb-3">256K+</div>
+                    <p class="text-gray-600">Donatur Bergabung</p>
                 </div>
-                
-                <div class="impact-card bg-white p-8 rounded-xl shadow-md text-center">
-                    <div class="text-5xl font-bold text-emerald-600 mb-4">8.742</div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Anak Terdidik</h3>
-                    <p class="text-gray-600">Memberikan akses pendidikan berkualitas di daerah terpencil</p>
-                    <div class="mt-4">
-                        <i class="fas fa-book-open text-3xl text-blue-500"></i>
-                    </div>
+                <div class="bg-white p-6 rounded-xl">
+                    <div class="text-4xl font-bold text-primary-600 mb-3">1.2M</div>
+                    <p class="text-gray-600">Pohon Tertanam</p>
                 </div>
-                
-                <div class="impact-card bg-white p-8 rounded-xl shadow-md text-center">
-                    <div class="text-5xl font-bold text-emerald-600 mb-4">24.156</div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Keluarga Terbantu</h3>
-                    <p class="text-gray-600">Menyediakan kebutuhan dasar untuk keluarga prasejahtera</p>
-                    <div class="mt-4">
-                        <i class="fas fa-home text-3xl text-orange-500"></i>
-                    </div>
+                <div class="bg-white p-6 rounded-xl">
+                    <div class="text-4xl font-bold text-primary-600 mb-3">45K+</div>
+                    <p class="text-gray-600">Anak Terdidik</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl">
+                    <div class="text-4xl font-bold text-primary-600 mb-3">350+</div>
+                    <p class="text-gray-600">Desa Terdampak</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="py-16 bg-emerald-700 text-white">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <section class="py-20 hero-gradient">
+        <div class="container mx-auto px-6 text-center">
             <h2 class="text-3xl font-bold mb-6">Siap Membuat Perubahan?</h2>
-            <p class="text-xl mb-8 max-w-2xl mx-auto">Bergabunglah dengan 125.678 donatur lainnya yang telah berkontribusi untuk masa depan yang lebih baik</p>
-            <a href="/register" class="inline-block bg-white text-emerald-700 px-10 py-4 rounded-full font-bold hover:bg-gray-100 transition duration-300">Daftar Sekarang - Gratis!</a>
+            <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Bergabunglah dengan komunitas kami dan mulai berkontribusi untuk masa depan yang lebih baik</p>
+            <div class="flex justify-center space-x-4">
+                <a href="/register" class="btn-primary px-8 py-3 rounded-lg text-white font-medium">
+                    Daftar Sekarang
+                </a>
+                <a href="/program" class="px-8 py-3 border border-primary-600 text-primary-600 rounded-lg font-medium hover:bg-white">
+                    Jelajahi Program
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Donaskuy</h3>
-                    <p class="text-gray-400">Platform donasi sosial dan lingkungan untuk mendukung pencapaian SDGs di Indonesia.</p>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-primary-600 flex items-center justify-center mr-3">
+                            <i class="fas fa-hand-holding-heart text-white"></i>
+                        </div>
+                        <span class="text-xl font-bold">DONASKUY</span>
+                    </div>
+                    <p class="text-gray-400">Platform donasi untuk mendukung Tujuan Pembangunan Berkelanjutan PBB.</p>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Tautan Cepat</h3>
+                    <h4 class="text-lg font-semibold mb-4">Tautan Cepat</h4>
                     <ul class="space-y-2">
                         <li><a href="#" class="text-gray-400 hover:text-white">Tentang Kami</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Program Donasi</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Laporan Dampak</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Program</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Cara Berdonasi</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Hubungi Kami</h3>
+                    <h4 class="text-lg font-semibold mb-4">Kontak</h4>
                     <ul class="space-y-2">
-                        <li class="text-gray-400"><i class="fas fa-envelope mr-2"></i> hello@donaskuy.id</li>
-                        <li class="text-gray-400"><i class="fas fa-phone mr-2"></i> +62 21 1234 5678</li>
-                        <li class="text-gray-400"><i class="fas fa-map-marker-alt mr-2"></i> Jakarta, Indonesia</li>
+                        <li class="flex items-center"><i class="fas fa-envelope mr-2 text-gray-400"></i> <span class="text-gray-400">hello@donaskuy.id</span></li>
+                        <li class="flex items-center"><i class="fas fa-phone mr-2 text-gray-400"></i> <span class="text-gray-400">+62 21 1234 5678</span></li>
+                        <li class="flex items-center"><i class="fas fa-map-marker-alt mr-2 text-gray-400"></i> <span class="text-gray-400">Jakarta, Indonesia</span></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Ikuti Kami</h3>
+                    <h4 class="text-lg font-semibold mb-4">Ikuti Kami</h4>
                     <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>© 2023 Donaskuy. All rights reserved.</p>
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400">© 2023 Donaskuy SDGS. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white">Kebijakan Privasi</a>
+                    <a href="#" class="text-gray-400 hover:text-white">Syarat & Ketentuan</a>
+                </div>
             </div>
         </div>
     </footer>
