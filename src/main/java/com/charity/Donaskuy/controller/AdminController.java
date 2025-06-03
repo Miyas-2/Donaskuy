@@ -49,6 +49,19 @@ public class AdminController {
         return "admin_dashboard";
     }
 
+     @GetMapping("/program")
+    public String program(HttpSession session, Model model) {
+        // With Spring Security, we don't need to check for admin in session, but keep it for compatibility
+        User admin = (User) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
+        model.addAttribute("categories", categoryRepo.findAll());
+        model.addAttribute("programs", programRepo.findAll());
+        model.addAttribute("documents", documentRepo.findAll());
+        return "admin_donation_program_add";
+    }
+
 // Remove the /login methods since Spring Security will handle them
     // --- CRUD Category ---
     @PostMapping("/category/add")

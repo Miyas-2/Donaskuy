@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layoutAdmin :: layoutAdmin(~{::title}, ~{::main})}">
+
+    
 
 <head>
     <title>Admin Dashboard</title>
     <meta charset="UTF-8">
 </head>
 
-<body>
+<main>
     <h2>Admin Dashboard</h2>
     <a href="/admin/logout">Logout</a>
     <h3>CRUD Category Program</h3>
@@ -180,6 +182,6 @@
             </td>
         </tr>
     </table>
-</body>
+</main>
 
 </html>

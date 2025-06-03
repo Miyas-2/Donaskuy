@@ -1,0 +1,114 @@
+<!-- file: sidebar.html -->
+<div th:fragment="sidebarAdmin">
+    <!-- Fixed sidebar container -->
+    <aside id="eco-sidebar"
+        class="fixed top-0 left-0 z-40 w-80 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-white shadow-soft-lg"
+        aria-label="Sidebar">
+        <!-- Close button -->
+        <div class="absolute top-4 right-4 sm:hidden">
+            <button type="button" data-drawer-hide="eco-sidebar"
+                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm w-8 h-8 inline-flex items-center justify-center transition-colors duration-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="h-full px-6 py-8 overflow-y-auto">
+            <!-- Logo section -->
+            <div class="mb-10 flex items-center gap-3">
+                <span class="text-white rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 p-3 shadow-md">
+                    <i class="fas fa-hand-holding-heart text-xl"></i>
+                </span>
+                <span class="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-500 bg-clip-text text-transparent">Donaskuy</span>
+            </div>
+            <!-- Navigation -->
+            <nav class="space-y-2">
+                <a href="/dashboard"
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-primary-50 hover:text-primary-600">
+                    <span class="w-6 text-center">
+                        <i class="fas fa-home text-primary-500"></i>
+                    </span>
+                    <span>Beranda</span>
+                </a>
+                <a href="/dashboard/program/add"
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-primary-50 hover:text-primary-600">
+                    <span class="w-6 text-center">
+                        <i class="fas fa-plus text-primary-500"></i>
+                    </span>
+                    <span>Ajukan Program</span>
+                </a>
+                <a href="/dashboard/upload"
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-primary-50 hover:text-primary-600">
+                    <span class="w-6 text-center">
+                        <i class="fas fa-file-alt text-primary-500"></i>
+                    </span>
+                    <span>Verifikasi Dokumen</span>
+                </a>
+                <a href="/dashboard/donasi"
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-primary-50 hover:text-primary-600">
+                    <span class="w-6 text-center">
+                        <i class="fas fa-donate text-primary-500"></i>
+                    </span>
+                    <span>Donasi Saya</span>
+                </a>
+                <a href="/dashboard/programs/mine"
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-primary-50 hover:text-primary-600">
+                    <span class="w-6 text-center">
+                        <i class="fas fa-project-diagram text-primary-500"></i>
+                    </span>
+                    <span>Program Saya</span>
+                </a>
+                <a href="/dashboard/profile"
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-primary-50 hover:text-primary-600">
+                    <span class="w-6 text-center">
+                        <i class="fas fa-user-cog text-primary-500"></i>
+                    </span>
+                    <span>Profil</span>
+                </a>
+                
+                <!-- SDGS Section -->
+                <div class="pt-6 mt-6 border-t border-gray-200">
+                    <div class="flex items-center gap-2 px-4 mb-3">
+                        <div class="w-2 h-6 rounded-full bg-gradient-to-b from-primary-500 to-secondary-500"></div>
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Tautan SDGS</p>
+                    </div>
+                    <a href="#"
+                        class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-primary-50 hover:text-primary-600">
+                        <span class="w-6 text-center">
+                            <i class="fas fa-seedling text-green-500"></i>
+                        </span>
+                        <span>Program Lingkungan</span>
+                    </a>
+                    <a href="#"
+                        class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-primary-50 hover:text-primary-600">
+                        <span class="w-6 text-center">
+                            <i class="fas fa-hands-helping text-blue-500"></i>
+                        </span>
+                        <span>Program Sosial</span>
+                    </a>
+                </div>
+                
+                <!-- Logout -->
+                <a href="/logout"
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 mt-8 text-base font-medium rounded-xl hover:bg-red-50 hover:text-red-600">
+                    <span class="w-6 text-center">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </span>
+                    <span>Logout</span>
+                </a>
+                
+                <!-- SDGS Badge -->
+                <div class="mt-12 p-4 bg-gradient-to-r from-primary-50 to-green-50 rounded-xl border border-primary-100">
+                    <div class="flex items-center gap-3">
+                        <img src="https://sdgs.un.org/themes/custom/undg/images/SDG-wheel-1.png" alt="SDGs" class="w-12 h-12">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">Mendukung Tujuan SDGs</p>
+                            <p class="text-xs text-gray-600">Donasi Anda berkontribusi untuk dunia yang lebih baik</p>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </aside>
+    <!-- Add backdrop for mobile -->
+    <div class="hidden bg-gray-900/70 backdrop-blur-sm fixed inset-0 z-30 sm:hidden" id="sidebar-backdrop"
+        aria-hidden="true"></div>
+</div>
