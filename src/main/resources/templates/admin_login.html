@@ -8,11 +8,12 @@
     <h2>Login Admin</h2>
     <form th:action="@{/admin/login}" method="post">
         <label>Email:</label>
-        <input type="email" name="email" required /><br/>
+        <input type="email" name="username" required /><br/> <!-- Changed from "email" to "username" -->
         <label>Password:</label>
         <input type="password" name="password" required /><br/>
         <button type="submit">Login</button>
     </form>
-    <div th:if="${error}" style="color:red;">[[${error}]]</div>
+    <div th:if="${param.error}" style="color:red;">Email atau password salah atau bukan admin!</div>
+    <div th:if="${param.logout}" style="color:green;">Anda telah logout.</div>
 </body>
 </html>

@@ -35,43 +35,10 @@ public class AdminController {
     private final CategoryRepository categoryRepo;
     private final DonationProgramRepository programRepo;
 
-    @GetMapping("/login")
-    public String loginPage(HttpSession session) {
-        // Jika sudah login sebagai user biasa, redirect ke index
-        if (session.getAttribute("user") != null) {
-            return "redirect:/";
-        }
-        // Jika sudah login sebagai admin, langsung ke dashboard admin
-        if (session.getAttribute("admin") != null) {
-            return "redirect:/admin/dashboard";
-        }
-        return "admin_login";
-    }
-
-    @PostMapping("/login")
-    public String processLogin(@RequestParam String email,
-            @RequestParam String password,
-            HttpSession session,
-            Model model) {
-        // Jika sudah login sebagai user biasa, redirect ke index
-        if (session.getAttribute("user") != null) {
-            return "redirect:/";
-        }
-        User user = userRepo.findByEmail(email).orElse(null);
-        if (user != null && user.getPassword().equals(password) && user.getRole() == User.Role.ADMIN) {
-            session.setAttribute("admin", user);
-            return "redirect:/admin/dashboard";
-        }
-        // Jika login bukan admin, redirect ke index
-        if (user != null && user.getRole() == User.Role.USER) {
-            return "redirect:/";
-        }
-        model.addAttribute("error", "Email/password salah atau bukan admin!");
-        return "admin_login";
-    }
-
+// Only update the dashboard method - the login methods will be handled by Spring Security
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
+        // With Spring Security, we don't need to check for admin in session, but keep it for compatibility
         User admin = (User) session.getAttribute("admin");
         if (admin == null) {
             return "redirect:/admin/login";
@@ -82,6 +49,7 @@ public class AdminController {
         return "admin_dashboard";
     }
 
+// Remove the /login methods since Spring Security will handle them
     // --- CRUD Category ---
     @PostMapping("/category/add")
     public String addCategory(@RequestParam String name, @RequestParam String description) {
