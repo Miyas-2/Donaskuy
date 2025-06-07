@@ -49,6 +49,42 @@ public class AdminController {
         return "admin_dashboard";
     }
 
+    @GetMapping("/category")
+    public String category(HttpSession session, Model model) {
+        // With Spring Security, we don't need to check for admin in session, but keep it for compatibility
+        User admin = (User) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
+        model.addAttribute("categories", categoryRepo.findAll());
+        model.addAttribute("programs", programRepo.findAll());
+        model.addAttribute("documents", documentRepo.findAll());
+        return "admin_category";
+    }
+    @GetMapping("/addProgram")
+    public String addProgram(HttpSession session, Model model) {
+        // With Spring Security, we don't need to check for admin in session, but keep it for compatibility
+        User admin = (User) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
+        model.addAttribute("categories", categoryRepo.findAll());
+        model.addAttribute("programs", programRepo.findAll());
+        model.addAttribute("documents", documentRepo.findAll());
+        return "admin_dashboard_program_add";
+    }
+     @GetMapping("/verifDok")
+    public String verifDok(HttpSession session, Model model) {
+        // With Spring Security, we don't need to check for admin in session, but keep it for compatibility
+        User admin = (User) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
+        model.addAttribute("categories", categoryRepo.findAll());
+        model.addAttribute("programs", programRepo.findAll());
+        model.addAttribute("documents", documentRepo.findAll());
+        return "admin_verifikasi_dok";
+    }
     // --- CRUD Category ---
     @PostMapping("/category/add")
     public String addCategory(@RequestParam String name, @RequestParam String description) {
