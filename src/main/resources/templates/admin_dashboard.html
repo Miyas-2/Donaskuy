@@ -29,19 +29,23 @@
 
         /* Gaya untuk Progress Bar Program Individu dan Total Donasi */
         .progress-bar {
-            height: 8px; /* Lebar progress bar */
+            height: 8px;
+            /* Lebar progress bar */
             border-radius: 4px;
-            background-color: #374151; /* Latar belakang bar lebih gelap */
+            background-color: #374151;
+            /* Latar belakang bar lebih gelap */
         }
 
         .progress-fill {
-            background: linear-gradient(90deg, #0d9488, #14b8a6); /* Gradient warna teal */
+            background: linear-gradient(90deg, #0d9488, #14b8a6);
+            /* Gradient warna teal */
             border-radius: 4px;
         }
 
         /* Gaya untuk Empty State (tidak ada program) */
         .empty-state-icon {
-            background: linear-gradient(135deg, #1f2937, #374151); /* Gradient lebih gelap untuk empty state */
+            background: linear-gradient(135deg, #1f2937, #374151);
+            /* Gradient lebih gelap untuk empty state */
             width: 80px;
             height: 80px;
             display: flex;
@@ -53,8 +57,10 @@
 
         /* Gaya untuk Kartu Ringkasan Baru di Admin Dashboard */
         .summary-card {
-            background-color: #1f2937; /* Latar belakang lebih gelap untuk kartu ringkasan */
-            border: 1px solid #374151; /* Border lebih gelap */
+            background-color: #1f2937;
+            /* Latar belakang lebih gelap untuk kartu ringkasan */
+            border: 1px solid #374151;
+            /* Border lebih gelap */
             border-radius: 8px;
             padding: 1.5rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -69,16 +75,17 @@
 </head>
 
 <!-- Main content area for the admin dashboard -->
-<main class="p-6 bg-dark-900 min-h-screen text-gray-100">
+<main class="p-6 bg-slate-900 min-h-screen text-indigo-950">
     <!-- Header section: Donation Programs title and "Create New Program" button -->
-    <div class="pb-6 mb-6 rounded-lg p-4 bg-dark-800 border border-dark-700">
+    <div class="pb-6 mb-6 rounded-lg p-4 bg-slate-950 border border-dark-400 hover:border-primary-100">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-gray-100">Program Donasi</h1>
-                <p class="text-sm text-gray-400 mt-1">Kelola program donasi untuk mendukung Tujuan Pembangunan Berkelanjutan (SDGs)</p>
+                <h1 class="text-2xl font-bold text-green-500">Program Donasi</h1>
+                <p class="text-sm text-gray-400 mt-1">Kelola program donasi untuk mendukung Tujuan Pembangunan
+                    Berkelanjutan (SDGs)</p>
             </div>
             <!-- Link to add new donation program -->
-            <a href="/dashboard/program/add"
+            <a href="/admin/addProgram"
                 class="inline-flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 shadow-md transition-all duration-200">
                 <i class="fas fa-plus mr-2"></i> Buat Program Baru
             </a>
@@ -86,42 +93,47 @@
     </div>
 
     <!-- Summary Cards Section -->
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-5">
         <!-- Total Programs Card -->
-        <div class="summary-card">
+        <div
+            class="summary-card pb-6 mb-6 rounded-lg p-4 bg-slate-950 border border-dark-400 me-2 hover:border-primary-100">
             <div class="flex items-center mb-3">
-                <i class="fas fa-boxes text-2xl text-primary-400 mr-3"></i>
+                <i class="fas fa-boxes text-2xl text-red-500 mr-2"></i>
                 <h4 class="text-lg font-semibold text-gray-100">Total Program</h4>
             </div>
             <!-- Display total programs count, default to 0 if null -->
-            <p class="text-4xl font-bold text-gray-100" th:text="${totalPrograms} ?: '0'"></p>
+            <p class="text-4xl font-bold text-gray-100 flex justify-center" th:text="${totalPrograms} ?: '0'"></p>
         </div>
 
         <!-- Total Users Card -->
-        <div class="summary-card">
+        <div
+            class="summary-card pb-6 mb-6 rounded-lg p-4 bg-slate-950 border border-dark-400 me-2 hover:border-primary-100">
             <div class="flex items-center mb-3">
-                <i class="fas fa-users text-2xl text-primary-400 mr-3"></i>
-                <h4 class="text-lg font-semibold text-gray-100">Total Pengguna</h4>
+                <i class="fas fa-users text-2xl text-yellow-500 mr-2"></i>
+                <h4 class="text-lg font-semibold text-gray-100">Total User</h4>
             </div>
             <!-- Display total users count, default to 0 if null -->
-            <p class="text-4xl font-bold text-gray-100" th:text="${totalUsers} ?: '0'"></p>
+            <p class="text-4xl font-bold text-gray-100 flex justify-center" th:text="${totalUsers} ?: '0'"></p>
         </div>
 
         <!-- Total Categories Card -->
-        <div class="summary-card">
+        <div
+            class="summary-card pb-6 mb-6 rounded-lg p-4 bg-slate-950 border border-dark-400 me-2 hover:border-primary-100">
             <div class="flex items-center mb-3">
-                <i class="fas fa-tags text-2xl text-primary-400 mr-3"></i>
+                <i class="fas fa-tags text-2xl text-primary-500 mr-2"></i>
                 <h4 class="text-lg font-semibold text-gray-100">Total Kategori</h4>
             </div>
             <!-- Display total categories count, default to 0 if null -->
-            <p class="text-4xl font-bold text-gray-100" th:text="${totalCategories} ?: '0'"></p>
+            <p class="text-4xl font-bold text-gray-100 flex justify-center" th:text="${totalCategories} ?: '0'"></p>
         </div>
 
         <!-- Overall Donation Progress Card (UPDATED to match reference image style) -->
-        <div class="summary-card col-span-full lg:col-span-1 flex flex-col justify-between">
+        <div
+            class="summary-card col-span-full lg:col-span-1 flex flex-col justify-between pb-6 mb-6 rounded-lg p-4 bg-slate-950 border border-dark-400 hover:border-primary-100">
             <div>
                 <div class="flex items-center mb-3">
-                    <i class="fas fa-hand-holding-usd text-2xl text-primary-400 mr-3"></i>
+                    <i class="fas fa-hand-holding-usd text-2xl text-green-500 mr-3  "></i>
                     <h4 class="text-lg font-semibold text-gray-100">Total Donasi</h4>
                 </div>
             </div>
@@ -129,7 +141,8 @@
                 <!-- Percentage and label above the bar, similar to image_60dcbc.png -->
                 <div class="flex justify-between text-base text-gray-400 mb-2">
                     <span>Progress Global</span>
-                    <span th:text="${#numbers.formatDecimal((totalCollectedAmount ?: 0) / (overallTargetAmount ?: 1) * 100, 1, 2)} + '%'"></span>
+                    <span
+                        th:text="${#numbers.formatDecimal((totalCollectedAmount ?: 0) / (overallTargetAmount ?: 1) * 100, 1, 2)} + '%'"></span>
                 </div>
                 <!-- Overall Donation Progress Bar -->
                 <div class="progress-bar w-full bg-gray-200 rounded-full h-2">
@@ -138,9 +151,10 @@
                     </div>
                 </div>
                 <!-- Display total collected amount and overall target amount below the bar -->
-                <div class="text-sm text-gray-400 mt-2 text-right">
-                    Rp<span th:text="${#numbers.formatDecimal(totalCollectedAmount ?: 0, 1, 'POINT', 2, 'COMMA')}"></span>
-                    / Rp<span th:text="${#numbers.formatDecimal(overallTargetAmount ?: 0, 1, 'POINT', 2, 'COMMA')}"></span>
+                <div class="text-sm text-gray-400 mt-2 ">
+                    Rp<span
+                        th:text="${#numbers.formatDecimal(totalCollectedAmount ?: 0, 1, 'POINT', 2, 'COMMA')}"></span>/ Rp<span
+                        th:text="${#numbers.formatDecimal(overallTargetAmount ?: 0, 1, 'POINT', 2, 'COMMA')}"></span>
                 </div>
             </div>
         </div>
@@ -149,17 +163,16 @@
 
     <!-- Category Filters Section -->
     <div class="mb-8">
-        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Filter Kategori</h3>
+        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Filter Kategori</h3>
         <div class="flex flex-wrap gap-2">
             <!-- "Semua Kategori" filter button -->
             <a href="/admin/dashboard" class="category-pill px-4 py-2 text-sm font-medium rounded-full"
-                th:classappend="${selectedCategoryId == null ? 'text-white bg-gradient-to-r from-primary-600 to-primary-500 shadow-md' : 'text-gray-300 bg-dark-700 border border-dark-500 hover:border-primary-300'}">
+                th:classappend="${selectedCategoryId == null ? 'text-white bg-gradient-to-r from-primary-600 to-primary-500 shadow-md' : 'text-gray-300 bg-slate-950 border border-dark-500 hover:border-primary-300'}">
                 Semua Kategori
             </a>
             <!-- Dynamically generated category filter buttons -->
             <a th:each="cat, catStat : ${categories}" th:href="@{/admin/dashboard(categoryId=${cat.id})}"
-                class="category-pill px-4 py-2 text-sm font-medium rounded-full border"
-                th:classappend="${cat.id == selectedCategoryId ?
+                class="category-pill px-4 py-2 text-sm font-medium rounded-full border bg-slate-950" th:classappend="${cat.id == selectedCategoryId ?
                     (cat.name == 'Lingkungan' ? 'text-white bg-gradient-to-r from-green-600 to-green-500 shadow-md border-transparent' :
                     cat.name == 'Sosial' ? 'text-white bg-gradient-to-r from-yellow-600 to-yellow-500 shadow-md border-transparent' :
                     cat.name == 'Kesehatan' ? 'text-white bg-gradient-to-r from-red-600 to-red-500 shadow-md border-transparent' :
@@ -184,7 +197,8 @@
     <!-- Program Cards Section -->
     <div th:if="${programs.size() > 0}" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <!-- Loop through each donation program -->
-        <div th:each="prog : ${programs}" class="program-card bg-dark-700 border border-dark-500 hover:border-primary-100">
+        <div th:each="prog : ${programs}"
+            class="program-card bg-slate-950 border border-dark-400 hover:border-primary-100">
             <!-- Program Image with SDG badge -->
             <div class="relative aspect-video">
                 <img th:if="${prog.photo}" th:src="@{'/uploads/' + ${prog.photo}}" class="w-full h-full object-cover">
@@ -196,8 +210,8 @@
                 <!-- SDG badge overlay -->
                 <div
                     class="absolute top-3 right-3 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center">
-                    <img src="https://sdgs.un.org/themes/custom/undg/images/SDG-wheel-1.png" alt="SDG"
-                        class="w-6 h-6">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRv4yeQUDjQuhimUhHfC7WUoI-DAl-E1S4b5w&s"
+                        alt="SDG" class="w-6 h-6">
                 </div>
             </div>
 
@@ -206,8 +220,7 @@
                 <!-- Category and Status -->
                 <div class="flex justify-between items-center mb-3">
                     <span th:if="${prog.category != null}"
-                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-                        th:classappend="${prog.category.name == 'Lingkungan' ? 'bg-green-50 text-green-700' :
+                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" th:classappend="${prog.category.name == 'Lingkungan' ? 'bg-green-50 text-green-700' :
                                          prog.category.name == 'Sosial' ? 'bg-blue-50 text-blue-700' :
                                          prog.category.name == 'Kesehatan' ? 'bg-blue-50 text-blue-700' :
                                          prog.category.name == 'Kemanusiaan' ? 'bg-blue-50 text-blue-700' :
@@ -253,15 +266,17 @@
 
                 <!-- Amount Info (Target vs Terkumpul) -->
                 <div class="grid grid-cols-2 gap-3 mb-5">
-                    <div class="bg-dark-800 p-3 rounded-lg">
+                    <div class="bg-slate-900 p-3 rounded-lg">
                         <p class="text-xs text-gray-500 mb-1">Target</p>
-                        <p class="text-sm font-semibold text-gray-100">Rp<span
-                                th:text="${#numbers.formatDecimal(prog.targetAmount, 1, 'POINT', 2, 'COMMA')}"></span></p>
+                        <p class="text-sm font-semibold text-gray-100">Rp <span
+                                th:text="${#numbers.formatDecimal(prog.targetAmount, 1, 'POINT', 2, 'COMMA')}"></span>
+                        </p>
                     </div>
-                    <div class="bg-dark-800 p-3 rounded-lg">
+                    <div class="bg-slate-900 p-3 rounded-lg">
                         <p class="text-xs text-gray-500 mb-1">Terkumpul</p>
-                        <p class="text-sm font-semibold text-gray-100">Rp<span
-                                th:text="${#numbers.formatDecimal(prog.collectedAmount ?: 0, 1, 'POINT', 2, 'COMMA')}"></span></p>
+                        <p class="text-sm font-semibold text-gray-100">Rp <span
+                                th:text="${#numbers.formatDecimal(prog.collectedAmount ?: 0, 1, 'POINT', 2, 'COMMA')}"></span>
+                        </p>
                     </div>
                 </div>
 
@@ -276,7 +291,7 @@
 
     <!-- Empty State Section (if no programs are found) -->
     <div th:unless="${programs.size() > 0}"
-        class="text-center py-16 bg-dark-700 rounded-xl shadow-sm border border-dark-500">
+        class="text-center py-16 bg-slate-950 rounded-xl shadow-sm border border-dark-400">
         <div class="empty-state-icon">
             <i class="fas fa-inbox text-3xl text-primary-600"></i>
         </div>
