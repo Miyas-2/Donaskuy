@@ -6,67 +6,66 @@
 </head>
 
 <main>
-    <div class="bg-white rounded-xl shadow-soft p-6">
+    <div class="bg-dark-700 rounded-xl shadow-soft p-6">
         <!-- Header Section -->
         <div class="flex items-center gap-4 mb-6">
             <div class="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center">
-                <i class="fas fa-hand-holding-heart text-primary-600 text-xl"></i>
+                <i class="fas fa-hand-holding-heart text-sky-950 text-xl"></i>
             </div>
             <div>
-                <h3 class="text-xl font-semibold text-gray-800">Program Donasi</h3>
-                <p class="text-sm text-gray-500">Kelola program donasi yang tersedia</p>
+                <h3 class="text-xl font-semibold text-gray-100">Program Donasi</h3>
+                <p class="text-sm text-gray-400">Kelola program donasi yang tersedia</p>
             </div>
         </div>
 
         <!-- Form Section -->
-        <div class="mb-8 p-6 bg-gradient-to-r from-primary-50 to-primary-100 rounded-xl border border-primary-200">
-            <h4 class="text-lg font-medium mb-4">Tambah Program Baru</h4>
+        <div class="mb-8 p-6 bg-gradient-to-r from-dark-800 to-dark-700 rounded-xl border border-dark-500">
+            <h4 class="text-lg font-medium text-gray-100 mb-4">Tambah Program Baru</h4>
             <form th:action="@{/admin/program/add}" method="post" enctype="multipart/form-data" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Judul Program</label>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Judul Program</label>
                         <input type="text" name="title" placeholder="Masukkan judul program" required
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
+                            class="w-full px-4 py-2 rounded-lg border border-dark-500 bg-dark-800 text-gray-100 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Kategori</label>
                         <select name="categoryId" required
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
+                            class="w-full px-4 py-2 rounded-lg border border-dark-500 bg-dark-800 text-gray-100 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
                             <option value="">Pilih Kategori</option>
                             <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
                         </select>
                     </div>
                     <div class="col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Deskripsi</label>
                         <textarea name="description" placeholder="Deskripsi program" required rows="3"
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-300"></textarea>
+                            class="w-full px-4 py-2 rounded-lg border border-dark-500 bg-dark-800 text-gray-100 focus:ring-2 focus:ring-primary-300 focus:border-primary-300"></textarea>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Target Donasi</label>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Target Donasi</label>
                         <input type="number" name="targetAmount" placeholder="Masukkan target donasi" required
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
+                            class="w-full px-4 py-2 rounded-lg border border-dark-500 bg-dark-800 text-gray-100 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Foto Program</label>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Foto Program</label>
                         <input type="file" name="photo" accept="image/*" required
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
+                            class="w-full px-4 py-2 rounded-lg border border-dark-500 bg-dark-800 text-gray-100 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Tanggal Mulai</label>
                         <input type="date" name="startDate" required
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
+                            class="w-full px-4 py-2 rounded-lg border border-dark-500 bg-dark-800 text-gray-100 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Berakhir</label>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Tanggal Berakhir</label>
                         <input type="date" name="endDate" required
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
+                            class="w-full px-4 py-2 rounded-lg border border-dark-500 bg-dark-800 text-gray-100 focus:ring-2 focus:ring-primary-300 focus:border-primary-300">
                     </div>
                 </div>
                 <div class="flex justify-end mt-6">
                     <button type="submit"
-                        class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200 flex items-center gap-2">
-                        <i class="fas fa-plus"></i>
-                        <span>Tambah Program</span>
+                        class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200">
+                        Tambah Program
                     </button>
                 </div>
             </form>
@@ -74,27 +73,25 @@
 
         <!-- Program List -->
         <div class="space-y-4">
-            <h4 class="text-lg font-medium mb-4">Daftar Program</h4>
+            <h4 class="text-lg font-medium text-gray-100 mb-4">Daftar Program</h4>
             <div class="grid grid-cols-1 gap-4">
-                <div th:each="prog : ${programs}" 
-                    class="p-4 bg-white rounded-lg border border-gray-200 hover:border-primary-200 transition-all duration-200">
+                <div th:each="prog : ${programs}"
+                    class="p-4 bg-dark-700 rounded-lg border border-dark-500 hover:border-primary-200 transition-all duration-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h5 class="font-medium text-gray-800" th:text="${prog.title}"></h5>
-                            <p class="text-sm text-gray-500" th:text="${prog.description}"></p>
+                            <h5 class="font-medium text-gray-100" th:text="${prog.title}"></h5>
+                            <p class="text-sm text-gray-400" th:text="${prog.description}"></p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button type="button"
-                                class="px-4 py-2 text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors duration-200">
-                                <i class="fas fa-edit"></i>
-                                <span>Edit</span>
-                            </button>
+                            <a th:href="@{/admin/program/edit/{id}(id=${prog.id})}"
+                                class="px-4 py-2 text-primary-600 bg-dark-600 rounded-lg hover:bg-primary-700 transition-colors duration-200">
+                                Edit
+                            </a>
                             <form th:action="@{/admin/program/delete}" method="post" class="inline">
                                 <input type="hidden" name="id" th:value="${prog.id}">
                                 <button type="submit"
-                                    class="px-4 py-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors duration-200">
-                                    <i class="fas fa-trash"></i>
-                                    <span>Hapus</span>
+                                    class="px-4 py-2 text-red-600 bg-dark-600 rounded-lg hover:bg-red-700 transition-colors duration-200">
+                                    Hapus
                                 </button>
                             </form>
                         </div>

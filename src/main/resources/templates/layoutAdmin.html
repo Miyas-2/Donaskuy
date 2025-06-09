@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:replace="${title}">Donaskuy - Platform Donasi</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
+            darkMode: 'class', // Enable dark mode
             theme: {
                 extend: {
                     fontFamily: {
@@ -18,25 +20,37 @@
                     },
                     colors: {
                         primary: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            200: '#99f6e4',
-                            300: '#5eead4',
-                            400: '#2dd4bf',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                            800: '#115e59',
-                            900: '#134e4a',
+                            50: '#1e3a8a',  // Darker shade for dark mode
+                            100: '#3b82f6',
+                            200: '#60a5fa',
+                            300: '#818cf8',
+                            400: '#a5b4fc',
+                            500: '#0ea5e9',  // Adjusted for better visibility in dark mode
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
                         },
                         secondary: {
                             500: '#f59e0b',
                             600: '#d97706',
+                        },
+                        dark: {  // Define dark mode specific colors
+                            50: '#e4e4e7',
+                            100: '#d4d4d8',
+                            200: '#a1a1aa',
+                            300: '#71717a',
+                            400: '#52525b',
+                            500: '#3f3f46',
+                            600: '#27272a',
+                            700: '#18181b',
+                            800: '#09090b',
+                            900: '#000000',
                         }
                     },
                     boxShadow: {
-                        'soft': '0 4px 24px rgba(0, 0, 0, 0.08)',
-                        'soft-lg': '0 8px 32px rgba(0, 0, 0, 0.12)'
+                        'soft': '0 4px 24px rgba(0, 0, 0, 0.2)',  // Adjusted shadow for dark mode
+                        'soft-lg': '0 8px 32px rgba(0, 0, 0, 0.25)'  // Adjusted shadow for dark mode
                     }
                 }
             }
@@ -47,9 +61,11 @@
             position: relative;
             transition: all 0.3s ease;
         }
+
         .sidebar-item:not(.active):hover {
             transform: translateX(4px);
         }
+
         .sidebar-item.active::before {
             content: '';
             position: absolute;
@@ -60,9 +76,11 @@
             background: linear-gradient(to bottom, #5eead4, #0d9488);
             border-radius: 0 4px 4px 0;
         }
+
         .nav-notification {
             position: relative;
         }
+
         .nav-notification::after {
             content: '3';
             position: absolute;
@@ -79,17 +97,18 @@
             justify-content: center;
             font-weight: 600;
         }
+
         .avatar-ring {
-            box-shadow: 0 0 0 2px white, 0 0 0 4px #5eead4;
+            box-shadow: 0 0 0 2px #3f3f46, 0 0 0 4px #5eead4;  /* Adjusted avatar ring for dark mode */
         }
     </style>
 </head>
 
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800 font-sans antialiased">
+<body class="dark bg-dark-800 text-dark-50 font-sans antialiased">  <!-- Added dark class and adjusted bg and text -->
     <!-- Hamburger button -->
     <button data-drawer-target="eco-sidebar" data-drawer-toggle="eco-sidebar" data-drawer-backdrop="true"
         aria-controls="eco-sidebar" type="button"
-        class="fixed z-20 inline-flex items-center p-3 mt-2 ms-4 text-sm rounded-full shadow-soft bg-white text-primary-600 hover:bg-primary-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-300">
+        class="fixed z-20 inline-flex items-center p-3 mt-2 ms-4 text-sm rounded-full shadow-soft bg-dark-700 text-primary-500 hover:bg-dark-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-300">  <!-- Adjusted button colors -->
         <span class="sr-only">Open sidebar</span>
         <i class="fas fa-bars w-4 h-4"></i>
     </button>
@@ -100,22 +119,25 @@
     <!-- Main content -->
     <div class="sm:ml-80 transition-all duration-300">
         <!-- Header -->
-        <header class="bg-white shadow-soft h-20 sticky top-0 z-10">
+        <header class="bg-dark-700 shadow-soft h-20 sticky top-0 z-10">  <!-- Adjusted header bg -->
             <div class="px-8 h-full flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <div class="w-3 h-8 rounded-full bg-primary-500"></div>
-                    <div class="w-3 h-8 rounded-full bg-secondary-500 opacity-80"></div>
+                    <div class="w-3 h-8 rounded-full bg-green-500 opacity-80"></div>
                     <div class="w-3 h-8 rounded-full bg-primary-500 opacity-60"></div>
                 </div>
                 <div class="flex items-center space-x-6">
-                    <button class="nav-notification p-2.5 hover:bg-primary-50 rounded-full transition-colors duration-200">
-                        <i class="fas fa-bell text-gray-600"></i>
+                    <button
+                        class="nav-notification p-2.5 hover:bg-dark-600 rounded-full transition-colors duration-200">  <!-- Adjusted button hover -->
+                        <i class="fas fa-bell text-gray-400"></i>
                     </button>
-                    <a href="/dashboard/profile" class="flex items-center space-x-2 group">
-                        <div class="avatar-ring rounded-full w-9 h-9 bg-primary-100 flex items-center justify-center">
-                            <i class="fas fa-user text-primary-600 text-sm"></i>
+                    <a href="#" class="flex items-center space-x-2 group">
+                        <div
+                            class="avatar-ring rounded-full w-9 h-9 bg-primary-100 flex items-center justify-center">
+                            <i class="fas fa-user text-primary-500 text-sm"></i>
                         </div>
-                        <span class="text-sm font-medium group-hover:text-primary-600 transition-colors duration-200">My Profile</span>
+                        <span
+                            class="text-sm font-medium group-hover:text-primary-500 transition-colors duration-200">Admin</span>  <!-- Adjusted text hover -->
                     </a>
                 </div>
             </div>
@@ -127,14 +149,19 @@
         </main>
 
         <!-- Footer -->
-        <footer class="max-w-7xl mx-auto mt-8 py-6 text-center text-sm text-gray-500 border-t border-gray-200">
+        <footer
+            class="max-w-7xl mx-auto mt-8 py-6 text-center text-sm text-gray-400 border-t border-dark-600">  <!-- Adjusted footer colors -->
             <div class="flex justify-center space-x-6 mb-4">
-                <a href="#" class="hover:text-primary-600 transition-colors duration-200"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="hover:text-primary-600 transition-colors duration-200"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="hover:text-primary-600 transition-colors duration-200"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="hover:text-primary-600 transition-colors duration-200"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="hover:text-primary-500 transition-colors duration-200"><i
+                        class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-primary-500 transition-colors duration-200"><i
+                        class="fab fa-facebook"></i></a>
+                <a href="#" class="hover:text-primary-500 transition-colors duration-200"><i
+                        class="fab fa-instagram"></i></a>
+                <a href="#" class="hover:text-primary-500 transition-colors duration-200"><i
+                        class="fab fa-linkedin"></i></a>
             </div>
-            <p>© 2023 Donaskuy. All rights reserved. <span class="text-primary-600">Supporting SDGs</span></p>
+            <p>©2025 Donaskuy. All rights reserved. <span class="text-primary-500">Supporting SDGs || Miyas X Zeeyd</span></p>
         </footer>
     </div>
 
@@ -163,10 +190,10 @@
         });
 
         // Mark active sidebar item based on current URL
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const currentPath = window.location.pathname;
             const sidebarLinks = document.querySelectorAll('#eco-sidebar a[href]');
-            
+
             sidebarLinks.forEach(link => {
                 if (link.getAttribute('href') === currentPath) {
                     link.classList.add('active');

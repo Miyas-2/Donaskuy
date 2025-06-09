@@ -25,4 +25,6 @@ public interface DonationProgramRepository extends JpaRepository<DonationProgram
             DonationProgram.DonationStatus donationStatus,
             Long categoryId
     );
+
+    List<DonationProgram> findByCategory_Id(Long categoryId);
 }

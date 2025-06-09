@@ -67,11 +67,19 @@
                 class="category-pill px-4 py-2 text-sm font-medium rounded-full border"
                 th:classappend="${cat.id == selectedCategoryId ? 
                     (cat.name == 'Lingkungan' ? 'text-white bg-gradient-to-r from-green-600 to-green-500 shadow-md border-transparent' : 
-                     cat.name == 'Sosial' ? 'text-white bg-gradient-to-r from-blue-600 to-blue-500 shadow-md border-transparent' : 
+                     cat.name == 'Sosial' ? 'text-white bg-gradient-to-r from-yellow-600 to-yellow-500 shadow-md border-transparent' : 
+                     cat.name == 'Kesehatan' ? 'text-white bg-gradient-to-r from-red-600 to-red-500 shadow-md border-transparent' :
+                     cat.name == 'Kemanusiaan' ? 'text-white bg-gradient-to-r from-amber-600 to-amber-500 shadow-md border-transparent' :
+                     cat.name == 'Keagamaan' ? 'text-white bg-gradient-to-r from-purple-600 to-purple-500 shadow-md border-transparent' : 
+                     cat.name == 'Pendidikan' ? 'text-white bg-gradient-to-r from-blue-600 to-blue-500 shadow-md border-transparent' :
                      'text-white bg-gradient-to-r from-primary-600 to-primary-500 shadow-md border-transparent') 
                     : 'text-gray-700 bg-white border-gray-200 hover:border-primary-300'}">
                 <i th:classappend="${cat.name == 'Lingkungan' ? 'fas fa-leaf mr-1.5' : 
                                   cat.name == 'Sosial' ? 'fas fa-hands-helping mr-1.5' : 
+                                    cat.name == 'Pendidikan' ? 'fas fa-book mr-1.5' : 
+                                  cat.name == 'Kesehatan' ? 'fas fa-stethoscope mr-1.5' : 
+                                  cat.name == 'Kemanusiaan' ? 'fas fa-tents mr-1.5' :
+                                  cat.name == 'Keagamaan' ? 'fas fa-mosque mr-1.5' : 
                                   'fas fa-tag mr-1.5'}"></i>
                 <span th:text="${cat.name}"></span>
             </a>
