@@ -39,14 +39,14 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String dashboard(@RequestParam(required = false) Long categoryId,
-                            HttpSession session,
-                            Model model) {
+            HttpSession session,
+            Model model) {
         // Dengan Spring Security, kita tidak perlu memeriksa admin di session, tapi tetap ada untuk kompatibilitas
         User admin = (User) session.getAttribute("admin");
         if (admin == null) {
             // Sebaiknya redirect ke halaman login atau unauthenticated error jika admin tidak ada
             // Untuk aplikasi yang lebih robust, gunakan Spring Security untuk otentikasi & otorisasi
-            return "redirect:/login"; 
+            return "redirect:/login";
         }
 
         List<DonationProgram> programs;
@@ -119,6 +119,22 @@ public class AdminController {
         return "admin_dashboard_program_add";
     }
 
+    @GetMapping("/program/{id}/")
+    public String DetailProgram(@PathVariable Long id, HttpSession session, Model model) {
+        User admin = (User) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/login";
+        }
+        Optional<DonationProgram> programOptional = programRepo.findById(id);
+        if (programOptional.isEmpty()) {
+            return "redirect:/admin/dashboard"; // Atau halaman error 404
+        }
+        DonationProgram program = programOptional.get();
+        model.addAttribute("program", program);
+        model.addAttribute("donations", program.getDonations());
+        return "admin_program_detail";
+    }
+
     @GetMapping("/verifDok")
     public String verifDok(HttpSession session, Model model) {
         User admin = (User) session.getAttribute("admin");
@@ -147,13 +163,13 @@ public class AdminController {
     // --- CRUD Program Donasi ---
     @PostMapping("/program/add")
     public String addProgram(@RequestParam String title,
-                             @RequestParam String description,
-                             @RequestParam Double targetAmount,
-                             @RequestParam String startDate,
-                             @RequestParam String endDate,
-                             @RequestParam Long categoryId,
-                             @RequestParam("photo") MultipartFile photo,
-                             HttpSession session) throws IOException {
+            @RequestParam String description,
+            @RequestParam Double targetAmount,
+            @RequestParam String startDate,
+            @RequestParam String endDate,
+            @RequestParam Long categoryId,
+            @RequestParam("photo") MultipartFile photo,
+            HttpSession session) throws IOException {
         Optional<Category> categoryOptional = categoryRepo.findById(categoryId); // Menggunakan Optional
         User admin = (User) session.getAttribute("admin");
 
@@ -179,7 +195,7 @@ public class AdminController {
             prog.setStatus(DonationProgram.ProgramStatus.APPROVED);
             prog.setPhoto(photoName);
             // Inisialisasi collectedAmount ke 0 saat membuat program baru
-            prog.setCollectedAmount(0.0); 
+            prog.setCollectedAmount(0.0);
             programRepo.save(prog);
         } else {
             // Handle jika kategori tidak ditemukan atau admin tidak login
@@ -191,14 +207,14 @@ public class AdminController {
     @PostMapping("/program/delete")
     public String deleteProgram(@RequestParam Long id) {
         programRepo.deleteById(id);
-        return "redirect:/admin/dashboard";
+        return "redirect:/admin/addProgram";
     }
 
     // --- Edit Category ---
     @PostMapping("/category/edit")
     public String editCategory(@RequestParam Long id,
-                               @RequestParam String name,
-                               @RequestParam String description) {
+            @RequestParam String name,
+            @RequestParam String description) {
         Optional<Category> catOptional = categoryRepo.findById(id); // Menggunakan Optional
         if (catOptional.isPresent()) {
             Category cat = catOptional.get();
@@ -214,15 +230,15 @@ public class AdminController {
     // --- Edit Program Donasi ---
     @PostMapping("/program/edit")
     public String editProgram(@RequestParam Long id,
-                              @RequestParam String title,
-                              @RequestParam String description,
-                              @RequestParam Double targetAmount,
-                              @RequestParam String startDate,
-                              @RequestParam String endDate,
-                              @RequestParam Long categoryId,
-                              @RequestParam(value = "photo", required = false) MultipartFile photo) throws IOException {
-        Optional<DonationProgram> progOptional = programRepo.findById(id); // Menggunakan Optional
-        Optional<Category> categoryOptional = categoryRepo.findById(categoryId); // Menggunakan Optional
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam Double targetAmount,
+            @RequestParam String startDate,
+            @RequestParam String endDate,
+            @RequestParam Long categoryId,
+            @RequestParam(value = "photo", required = false) MultipartFile photo) throws IOException {
+        Optional<DonationProgram> progOptional = programRepo.findById(id);
+        Optional<Category> categoryOptional = categoryRepo.findById(categoryId);
 
         if (progOptional.isPresent() && categoryOptional.isPresent()) {
             DonationProgram prog = progOptional.get();
@@ -235,7 +251,6 @@ public class AdminController {
             prog.setEndDate(LocalDate.parse(endDate));
             prog.setCategory(category);
 
-            // Jika ada file foto baru, simpan dan update
             if (photo != null && !photo.isEmpty()) {
                 String uploadDir = System.getProperty("user.dir") + "/uploads/";
                 File dir = new File(uploadDir);
@@ -248,10 +263,8 @@ public class AdminController {
             }
 
             programRepo.save(prog);
-        } else {
-            System.out.println("Error: Program with ID " + id + " or Category with ID " + categoryId + " not found for editing.");
         }
-        return "redirect:/admin/dashboard";
+        return "redirect:/admin/addProgram"; // Ubah dari "redirect:/admin/dashboard"
     }
 
     // --- Verifikasi Dokumen User ---

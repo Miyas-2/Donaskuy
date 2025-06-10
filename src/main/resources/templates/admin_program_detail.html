@@ -1,40 +1,279 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layoutAdmin :: layoutAdmin(~{::title}, ~{::main})}">
 
 <head>
-    <title>Detail Program Donasi</title>
+    <title>Detail Program Donasi - Admin</title>
     <meta charset="UTF-8">
+    <style>
+        .detail-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #374151;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #0d9488, #14b8a6);
+            border-radius: 5px;
+        }
+
+        .donor-table {
+            background-color: #1f2937;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+    </style>
 </head>
 
-<body>
-    <h2 th:text="${program.title}"></h2>
-    <img th:if="${program.photo != null}" th:src="@{'/uploads/' + ${program.photo}}" width="200" alt="Foto Program"><br>
-    <b>Deskripsi:</b> <span th:text="${program.description}"></span><br>
-    <b>Target:</b> <span th:text="${program.targetAmount}"></span><br>
-    <b>Terkumpul (DB):</b> <span th:text="${program.collectedAmount}"></span><br>
-    <b>Periode:</b> <span th:text="${program.startDate}"></span> s/d <span th:text="${program.endDate}"></span><br>
-    <b>Kategori:</b> <span th:text="${program.category.name}"></span><br>
-    <b>Status:</b> <span th:text="${program.status}"></span><br>
-    <hr>
-    <h3>Daftar Donatur</h3>
-    <table border="1">
-        <tr>
-            <th>Nama Donatur</th>
-            <th>Email</th>
-            <th>Nominal</th>
-            <th>Status Pembayaran</th>
-            <th>Tanggal</th>
-        </tr>
-        <tr th:each="don : ${donations}">
-            <td th:text="${don.user.name}"></td>
-            <td th:text="${don.user.email}"></td>
-            <td th:text="${don.amount}"></td>
-            <td th:text="${don.paymentStatus}"></td>
-            <td th:text="${#temporals.format(don.donatedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-        </tr>
-    </table>
-    <br>
-    <a href="/admin/dashboard">Kembali ke Dashboard</a>
-</body>
+<main class="p-6 bg-slate-900 min-h-screen text-gray-100">
+    <!-- Back Button and Header -->
+    <div class="mb-6">
+        <div class="flex items-center gap-4 mb-4">
+            <a href="/admin/dashboard"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-300 bg-slate-800 border border-gray-600 rounded-lg hover:bg-slate-700 hover:text-white transition-all duration-200">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Kembali ke Dashboard
+            </a>
+        </div>
+        <h1 class="text-3xl font-bold text-green-500 mb-2">Detail Program Donasi</h1>
+        <p class="text-gray-400">Informasi lengkap program dan daftar donatur</p>
+    </div>
+
+    <!-- Program Information Card -->
+    <div
+        class="detail-card bg-slate-950 border border-dark-400 hover:border-primary-100 rounded-xl overflow-hidden mb-8">
+        <!-- Program Image Section -->
+        <div class="relative h-64 md:h-80">
+            <img th:if="${program.photo}" th:src="@{'/uploads/' + ${program.photo}}" class="w-full h-full object-cover"
+                alt="Foto Program">
+            <div th:unless="${program.photo}"
+                class="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
+                <i class="fas fa-image text-gray-400 text-5xl"></i>
+            </div>
+            <!-- SDG Badge -->
+            <div
+                class="absolute top-4 right-4 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRv4yeQUDjQuhimUhHfC7WUoI-DAl-E1S4b5w&s"
+                    alt="SDG" class="w-8 h-8">
+            </div>
+            <!-- Status Badge -->
+            <div class="absolute top-4 left-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                    th:classappend="${(program.collectedAmount ?: 0) >= program.targetAmount ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}">
+                    <i
+                        th:classappend="${(program.collectedAmount ?: 0) >= program.targetAmount ? 'fas fa-check-circle mr-2' : 'fas fa-clock mr-2'}"></i>
+                    <span
+                        th:text="${(program.collectedAmount ?: 0) >= program.targetAmount ? 'Target Tercapai' : 'Sedang Berjalan'}"></span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Program Details Section -->
+        <div class="p-8">
+            <!-- Title and Category -->
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+                <div class="flex-1">
+                    <h2 class="text-2xl font-bold text-gray-100 mb-3" th:text="${program.title}"></h2>
+                    <div class="flex items-center gap-3">
+                        <span th:if="${program.category != null}"
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" th:classappend="${program.category.name == 'Lingkungan' ? 'bg-green-100 text-green-800' :
+                                             program.category.name == 'Sosial' ? 'bg-blue-100 text-blue-800' :
+                                             program.category.name == 'Kesehatan' ? 'bg-red-100 text-red-800' :
+                                             program.category.name == 'Kemanusiaan' ? 'bg-amber-100 text-amber-800' :
+                                             program.category.name == 'Keagamaan' ? 'bg-purple-100 text-purple-800' :
+                                             program.category.name == 'Pendidikan' ? 'bg-indigo-100 text-indigo-800' :
+                                             'bg-gray-100 text-gray-800'}">
+                            <i th:classappend="${program.category.name == 'Lingkungan' ? 'fas fa-leaf mr-2' :
+                                                 program.category.name == 'Sosial' ? 'fas fa-hands-helping mr-2' :
+                                                 program.category.name == 'Kesehatan' ? 'fas fa-stethoscope mr-2' :
+                                                 program.category.name == 'Kemanusiaan' ? 'fas fa-tents mr-2' :
+                                                 program.category.name == 'Keagamaan' ? 'fas fa-mosque mr-2' :
+                                                 program.category.name == 'Pendidikan' ? 'fas fa-book mr-2' :
+                                                 'fas fa-tag mr-2'}"></i>
+                            <span th:text="${program.category.name}"></span>
+                        </span>
+                        <span class="text-sm text-gray-400" th:text="${program.status}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-8">
+                <h4 class="text-lg font-semibold text-gray-200 mb-3">
+                    <i class="fas fa-align-left mr-2 text-primary-500"></i>
+                    Deskripsi Program
+                </h4>
+                <p class="text-gray-300 leading-relaxed" th:text="${program.description}"></p>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="mb-8">
+                <h4 class="text-lg font-semibold text-gray-200 mb-4">
+                    <i class="fas fa-chart-line mr-2 text-primary-500"></i>
+                    Progress Donasi
+                </h4>
+                <div class="bg-slate-900 p-6 rounded-lg">
+                    <div class="flex justify-between text-sm text-gray-400 mb-2">
+                        <span>Progress Terkini</span>
+                        <span
+                            th:text="${#numbers.formatDecimal((program.collectedAmount ?: 0) / program.targetAmount * 100, 1, 2)} + '%'"></span>
+                    </div>
+                    <div class="progress-bar w-full mb-4">
+                        <div class="progress-fill h-full transition-all duration-500"
+                            th:style="'width: ' + ${#numbers.formatInteger(((program.collectedAmount ?: 0) / program.targetAmount * 100 < 100) ? ((program.collectedAmount ?: 0) / program.targetAmount * 100) : 100, 1)} + '%'">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <p class="text-sm text-gray-500 mb-1">Target Dana</p>
+                            <p class="text-xl font-bold text-green-400">
+                                Rp <span
+                                    th:text="${#numbers.formatDecimal(program.targetAmount, 1, 'POINT', 2, 'COMMA')}"></span>
+                            </p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-500 mb-1">Dana Terkumpul</p>
+                            <p class="text-xl font-bold text-blue-400">
+                                Rp <span
+                                    th:text="${#numbers.formatDecimal(program.collectedAmount ?: 0, 1, 'POINT', 2, 'COMMA')}"></span>
+                            </p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-500 mb-1"
+                                th:text="${(program.collectedAmount ?: 0) >= program.targetAmount ? 'Uang Lebih' : 'Sisa Target'}">
+                            </p>
+                            <p class="text-xl font-bold"
+                                th:classappend="${(program.collectedAmount ?: 0) >= program.targetAmount ? 'text-green-400' : 'text-amber-400'}">
+                                Rp <span
+                                    th:text="${#numbers.formatDecimal(T(java.lang.Math).abs(program.targetAmount - (program.collectedAmount ?: 0)), 1, 'POINT', 2, 'COMMA')}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Period Information -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-slate-900 p-4 rounded-lg">
+                    <h4 class="text-sm font-medium text-gray-400 mb-2">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        Tanggal Mulai
+                    </h4>
+                    <p class="text-lg font-semibold text-gray-200"
+                        th:text="${#temporals.format(program.startDate, 'dd MMMM yyyy')}"></p>
+                </div>
+                <div class="bg-slate-900 p-4 rounded-lg">
+                    <h4 class="text-sm font-medium text-gray-400 mb-2">
+                        <i class="fas fa-calendar-check mr-2"></i>
+                        Tanggal Selesai
+                    </h4>
+                    <p class="text-lg font-semibold text-gray-200"
+                        th:text="${#temporals.format(program.endDate, 'dd MMMM yyyy')}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donors List Section -->
+    <div class="detail-card bg-slate-950 border border-dark-400 hover:border-primary-100 rounded-xl p-8">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-gray-100">
+                <i class="fas fa-users mr-3 text-primary-500"></i>
+                Daftar Donatur
+            </h3>
+            <span class="bg-primary-100 text-primary-800 text-sm font-medium px-3 py-1 rounded-full">
+                <span th:text="${#lists.size(donations)}"></span> Donatur
+            </span>
+        </div>
+
+        <!-- Donors Table -->
+        <div th:if="${#lists.size(donations) > 0}" class="donor-table overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-slate-800">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                <i class="fas fa-user mr-2"></i>Donatur
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                <i class="fas fa-envelope mr-2"></i>Email
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                <i class="fas fa-money-bill-wave mr-2"></i>Nominal
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                <i class="fas fa-credit-card mr-2"></i>Status
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                <i class="fas fa-calendar mr-2"></i>Tanggal
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700">
+                        <tr th:each="don, iterStat : ${donations}"
+                            class="hover:bg-slate-800 transition-colors duration-200"
+                            th:classappend="${iterStat.even ? 'bg-slate-900' : 'bg-slate-850'}">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <div
+                                            class="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
+                                            <i class="fas fa-user text-primary-600"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-200" th:text="${don.user.name}"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300" th:text="${don.user.email}">
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-semibold text-green-400">
+                                    Rp <span
+                                        th:text="${#numbers.formatDecimal(don.amount, 1, 'POINT', 2, 'COMMA')}"></span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                    th:classappend="${don.paymentStatus == 'SUCCESS' ? 'bg-green-100 text-green-800' : 
+                                                     don.paymentStatus == 'PENDING' ? 'bg-yellow-100 text-yellow-800' : 
+                                                     'bg-red-100 text-red-800'}">
+                                    <i th:classappend="${don.paymentStatus == 'SUCCESS' ? 'fas fa-check-circle mr-1' : 
+                                                        don.paymentStatus == 'PENDING' ? 'fas fa-clock mr-1' : 
+                                                        'fas fa-times-circle mr-1'}"></i>
+                                    <span th:text="${don.paymentStatus}"></span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                                <div th:text="${#temporals.format(don.donatedAt, 'dd/MM/yyyy')}"></div>
+                                <div class="text-xs text-gray-500"
+                                    th:text="${#temporals.format(don.donatedAt, 'HH:mm')}"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Empty State for Donors -->
+        <div th:unless="${#lists.size(donations) > 0}" class="text-center py-12">
+            <div class="mx-auto h-16 w-16 rounded-full bg-gray-700 flex items-center justify-center mb-4">
+                <i class="fas fa-users text-2xl text-gray-400"></i>
+            </div>
+            <h4 class="text-lg font-medium text-gray-300 mb-2">Belum Ada Donatur</h4>
+            <p class="text-sm text-gray-500">Program ini belum menerima donasi dari para donatur.</p>
+        </div>
+    </div>
+</main>
 
 </html>
