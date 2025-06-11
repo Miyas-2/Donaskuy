@@ -89,27 +89,26 @@
         </div>
 
         <!-- Form -->
-        <form
+        <form id="programForm"
             th:action="${isEdit != null and isEdit ? '/dashboard/program/edit/' + program.id : '/dashboard/program/add'}"
             method="post" enctype="multipart/form-data" class="space-y-6">
 
             <!-- Program Title -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Judul Program</label>
-                <input type="text" name="title" required th:value="${program?.title}"
-                    class="input-field mt-1 block w-full px-4 py-3 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none">
+                <input type="text" name="title" id="title" required th:value="${program?.title}"
+                    class="input-field mt-1 block w-full px-4 py-3 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none"
+                    placeholder="Masukkan judul program donasi">
             </div>
 
             <!-- Description -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Program</label>
-                <textarea name="description" rows="5" required
+                <textarea name="description" id="description" rows="5" required
                     class="input-field mt-1 block w-full px-4 py-3 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none"
-                    th:text="${program?.description}"></textarea>
+                    placeholder="Jelaskan detail program donasi Anda..." th:text="${program?.description}"></textarea>
                 <p class="mt-1 text-xs text-gray-500">Jelaskan secara detail tujuan dan manfaat program Anda</p>
             </div>
-
-            <!-- ...existing code... -->
 
             <!-- Target Amount -->
             <div>
@@ -118,10 +117,10 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <span class="text-gray-500">Rp</span>
                     </div>
-                    <input type="number" name="targetAmount" required min="10000" max="999999999999" step="1000"
-                        th:value="${program?.targetAmount}"
+                    <input type="number" name="targetAmount" id="targetAmount" required min="10000" max="999999999999"
+                        step="1000" th:value="${program?.targetAmount}"
                         class="input-field block w-full pl-10 pr-4 py-3 border border-gray-300 placeholder-gray-400 focus:outline-none"
-                        placeholder="0">
+                        placeholder="10000">
                 </div>
                 <p class="mt-1 text-xs text-gray-500">Minimum Rp 10.000</p>
             </div>
@@ -130,12 +129,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
-                    <input type="date" name="startDate" required th:value="${program?.startDate}"
+                    <input type="date" name="startDate" id="startDate" required th:value="${program?.startDate}"
                         class="input-field mt-1 block w-full px-4 py-3 border border-gray-300 shadow-sm focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Selesai</label>
-                    <input type="date" name="endDate" required th:value="${program?.endDate}"
+                    <input type="date" name="endDate" id="endDate" required th:value="${program?.endDate}"
                         class="input-field mt-1 block w-full px-4 py-3 border border-gray-300 shadow-sm focus:outline-none">
                 </div>
             </div>
@@ -143,7 +142,7 @@
             <!-- Category -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Kategori Program</label>
-                <select name="categoryId" required
+                <select name="categoryId" id="categoryId" required
                     class="input-field mt-1 block w-full px-4 py-3 border border-gray-300 shadow-sm focus:outline-none">
                     <option value="">Pilih Kategori</option>
                     <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
@@ -178,7 +177,7 @@
                             <label
                                 class="relative cursor-pointer rounded-md font-medium text-primary-600 hover:text-primary-700">
                                 <span th:text="${isEdit != null and isEdit ? 'Pilih foto baru' : 'Pilih foto'}"></span>
-                                <input type="file" name="photo" accept="image/*" th:required="${!isEdit}"
+                                <input type="file" name="photo" id="photo" accept="image/*" th:required="${!isEdit}"
                                     class="sr-only" onchange="previewImage(this)">
                             </label>
                             <p class="sm:pl-1">atau drag and drop</p>
@@ -188,15 +187,26 @@
                 </div>
             </div>
 
+            <!-- Error Messages -->
+            <div id="errorContainer" class="hidden">
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div class="flex">
+                        <i class="fas fa-exclamation-circle text-red-500 mr-2 mt-0.5"></i>
+                        <div>
+                            <h4 class="text-sm font-medium text-red-800">Terjadi Kesalahan</h4>
+                            <ul id="errorList" class="mt-1 text-sm text-red-700 list-disc list-inside"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Submit Button -->
             <div class="pt-4">
-                <button type="submit"
+                <button type="submit" id="submitBtn"
                     class="submit-btn w-full px-6 py-3 text-sm font-medium text-white focus:outline-none"
                     th:text="${isEdit != null and isEdit ? 'Simpan Perubahan' : 'Ajukan Program'}">
                 </button>
             </div>
-
-            <!-- ...existing code... -->
         </form>
     </div>
 
