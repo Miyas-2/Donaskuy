@@ -1,68 +1,86 @@
 <div th:fragment="sidebarAdmin">
     <aside id="eco-sidebar"
-        class="fixed top-0 left-0 z-40 w-80 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-dark-700 shadow-soft-lg"  aria-label="Sidebar">
+        class="fixed top-0 left-0 z-40 w-80 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-dark-700 shadow-soft-lg"
+        aria-label="Sidebar">
         <!-- Close button -->
         <div class="absolute top-4 right-4 sm:hidden">
             <button type="button" data-drawer-hide="eco-sidebar"
-                class="text-gray-400 bg-transparent hover:bg-dark-600 hover:text-gray-300 rounded-full text-sm w-8 h-8 inline-flex items-center justify-center transition-colors duration-200">  <!-- Adjusted button colors -->
+                class="text-gray-400 bg-transparent hover:bg-dark-600 hover:text-gray-300 rounded-full text-sm w-8 h-8 inline-flex items-center justify-center transition-colors duration-200">
+                <!-- Adjusted button colors -->
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="h-full px-6 py-8 overflow-y-auto bg-gray-950">  <!-- Adjusted bg -->
+        <div class="h-full px-6 py-8 overflow-y-auto bg-gray-950"> <!-- Adjusted bg -->
             <!-- Logo section -->
             <div class="mb-10 flex items-center gap-3">
                 <span class="text-white rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 p-3 shadow-md">
                     <i class="fas fa-hand-holding-heart text-xl"></i>
                 </span>
                 <span
-                    class="text-2xl font-bold bg-gradient-to-r from-sky-500 to-green-500 bg-clip-text text-transparent">Donaskuy</span>  <!-- Adjusted gradient -->
+                    class="text-2xl font-bold bg-gradient-to-r from-sky-500 to-green-500 bg-clip-text text-transparent">Donaskuy</span>
+                <!-- Adjusted gradient -->
             </div>
             <!-- Navigation -->
             <nav class="space-y-2">
                 <a href="/admin/dashboard"
-                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">  <!-- Adjusted colors -->
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">
+                    <!-- Adjusted colors -->
                     <span class="w-6 text-center">
                         <i class="fas fa-home text-primary-500"></i>
                     </span>
                     <span>Beranda</span>
                 </a>
                 <a href="/admin/category"
-                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">  <!-- Adjusted colors -->
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">
+                    <!-- Adjusted colors -->
                     <span class="w-6 text-center">
                         <i class="fas fa-tags text-primary-500"></i>
                     </span>
                     <span>Manajemen Kategori</span>
                 </a>
                 <a href="/admin/addProgram"
-                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">  <!-- Adjusted colors -->
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">
+                    <!-- Adjusted colors -->
                     <span class="w-6 text-center">
                         <i class="fas fa-tags text-primary-500"></i>
                     </span>
                     <span>Program Donasi</span>
                 </a>
                 <a href="/admin/verifDok"
-                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">  <!-- Adjusted colors -->
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">
                     <span class="w-6 text-center">
                         <i class="fas fa-file-alt text-primary-500"></i>
                     </span>
                     <span>Verifikasi Dokumen</span>
                 </a>
 
+                <!-- Tambahkan menu baru -->
+                <a href="/admin/verifyProgram"
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">
+                    <span class="w-6 text-center">
+                        <i class="fas fa-check-circle text-primary-500"></i>
+                    </span>
+                    <span>Verifikasi Program</span>
+                </a>
+
                 <!-- SDGS Section -->
-                <div class="pt-6 mt-6 border-t border-dark-600">  <!-- Adjusted border color -->
+                <div class="pt-6 mt-6 border-t border-dark-600"> <!-- Adjusted border color -->
                     <div class="flex items-center gap-2 px-4 mb-3">
                         <div class="w-2 h-6 rounded-full bg-gradient-to-b from-sky-500 to-green-500"></div>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Tautan SDGS</p>  <!-- Adjusted text color -->
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Tautan SDGS</p>
+                        <!-- Adjusted text color -->
                     </div>
                     <a href="#"
-                        class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">  <!-- Adjusted colors -->
+                        class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">
+                        <!-- Adjusted colors -->
                         <span class="w-6 text-center">
                             <i class="fas fa-seedling text-green-500"></i>
                         </span>
                         <span>Program Lingkungan</span>
                     </a>
                     <a href="#"
-                        class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">  <!-- Adjusted colors -->
+                        class="sidebar-item flex items-center gap-4 px-4 py-3 text-base font-medium rounded-xl hover:bg-slate-900 hover:text-primary-500 text-gray-400">
+                        <!-- Adjusted colors -->
                         <span class="w-6 text-center">
                             <i class="fas fa-hands-helping text-blue-500"></i>
                         </span>
@@ -72,7 +90,8 @@
 
                 <!-- Logout -->
                 <a href="/logout"
-                    class="sidebar-item flex items-center gap-4 px-4 py-3 mt-8 text-base font-medium rounded-xl hover:bg-red-700 hover:text-white text-red-400">  <!-- Adjusted colors -->
+                    class="sidebar-item flex items-center gap-4 px-4 py-3 mt-8 text-base font-medium rounded-xl hover:bg-red-700 hover:text-white text-red-400">
+                    <!-- Adjusted colors -->
                     <span class="w-6 text-center">
                         <i class="fas fa-sign-out-alt"></i>
                     </span>
@@ -80,14 +99,15 @@
                 </a>
 
                 <!-- SDGS Badge -->
-                <div
-                    class="mt-12 p-4 bg-dark-950 rounded-xl border border-dark-500">  <!-- Adjusted badge colors -->
+                <div class="mt-12 p-4 bg-dark-950 rounded-xl border border-dark-500"> <!-- Adjusted badge colors -->
                     <div class="flex items-center gap-3">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHbfnVFt2zL9mVG-1heiJn7JlQtxDeF7bn-A&s" alt="SDGs"
-                            class="w-12 h-12">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHbfnVFt2zL9mVG-1heiJn7JlQtxDeF7bn-A&s"
+                            alt="SDGs" class="w-12 h-12">
                         <div>
-                            <p class="text-sm font-semibold text-gray-300">Mendukung Tujuan SDGs</p>  <!-- Adjusted text color -->
-                            <p class="text-xs text-gray-400">Donasi Anda berkontribusi untuk dunia yang lebih baik</p>  <!-- Adjusted text color -->
+                            <p class="text-sm font-semibold text-gray-300">Mendukung Tujuan SDGs</p>
+                            <!-- Adjusted text color -->
+                            <p class="text-xs text-gray-400">Donasi Anda berkontribusi untuk dunia yang lebih baik</p>
+                            <!-- Adjusted text color -->
                         </div>
                     </div>
                 </div>

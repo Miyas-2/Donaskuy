@@ -325,4 +325,62 @@ public class AdminController {
         }
         return "redirect:/admin/dashboard";
     }
+
+    // ...existing code...
+    @GetMapping("/verifyProgram")
+    public String verifyProgram(HttpSession session, Model model) {
+        User admin = (User) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/login";
+        }
+
+        // Ambil program yang pending/perlu verifikasi
+        List<DonationProgram> pendingPrograms = programRepo.findByStatus(DonationProgram.ProgramStatus.PENDING);
+        List<DonationProgram> allPrograms = programRepo.findAll();
+
+        // Statistics untuk dashboard cards
+        long pendingCount = programRepo.countByStatus(DonationProgram.ProgramStatus.PENDING);
+        long approvedCount = programRepo.countByStatus(DonationProgram.ProgramStatus.APPROVED);
+        long rejectedCount = programRepo.countByStatus(DonationProgram.ProgramStatus.REJECTED);
+        long totalPrograms = programRepo.count();
+
+        model.addAttribute("programs", pendingPrograms);
+        model.addAttribute("allPrograms", allPrograms);
+        model.addAttribute("categories", categoryRepo.findAll());
+        model.addAttribute("documents", documentRepo.findAll());
+
+        // Add statistics
+        model.addAttribute("pendingCount", pendingCount);
+        model.addAttribute("approvedCount", approvedCount);
+        model.addAttribute("rejectedCount", rejectedCount);
+        model.addAttribute("totalPrograms", totalPrograms);
+
+        return "admin_verify_program";
+    }
+
+    @PostMapping("/program/verify")
+    public String verifyProgramStatus(@RequestParam Long programId,
+            @RequestParam("status") DonationProgram.ProgramStatus status,
+            @RequestParam(value = "donationStatus", required = false) DonationProgram.DonationStatus donationStatus,
+            @RequestParam(value = "rejectionReason", required = false) String rejectionReason) {
+        Optional<DonationProgram> progOptional = programRepo.findById(programId);
+        if (progOptional.isPresent()) {
+            DonationProgram prog = progOptional.get();
+            prog.setStatus(status);
+
+            // Set donation status jika program diapprove
+            if (status == DonationProgram.ProgramStatus.APPROVED) {
+                prog.setDonationStatus(donationStatus != null ? donationStatus : DonationProgram.DonationStatus.ACTIVE);
+            } else if (status == DonationProgram.ProgramStatus.REJECTED) {
+                prog.setDonationStatus(DonationProgram.DonationStatus.INACTIVE);
+                // Simpan alasan penolakan jika ada field untuk itu di model
+                // prog.setRejectionReason(rejectionReason);
+            }
+
+            programRepo.save(prog);
+        }
+        return "redirect:/admin/verifyProgram";
+    }
+
+// ...existing code...
 }

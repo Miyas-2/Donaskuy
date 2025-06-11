@@ -58,47 +58,102 @@ public class UserProgramController {
         return "dashboard_program_add";
     }
 
+// ...existing code...
     @PostMapping("/program/add")
     public String addUserProgram(@RequestParam String title,
-                                 @RequestParam String description,
-                                 @RequestParam Double targetAmount,
-                                 @RequestParam String startDate,
-                                 @RequestParam String endDate,
-                                 @RequestParam Long categoryId,
-                                 @RequestParam("photo") MultipartFile photo,
-                                 HttpSession session) throws IOException {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        if (user.getIsVerified() == null || !user.getIsVerified()) {
-            return "redirect:/dashboard?notverified";
-        }
-        String uploadDir = System.getProperty("user.dir") + "/uploads/";
-        File dir = new File(uploadDir);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        String photoName = System.currentTimeMillis() + "_" + photo.getOriginalFilename();
-        photo.transferTo(new File(uploadDir + photoName));
+            @RequestParam String description,
+            @RequestParam Double targetAmount,
+            @RequestParam String startDate,
+            @RequestParam String endDate,
+            @RequestParam Long categoryId,
+            @RequestParam("photo") MultipartFile photo,
+            HttpSession session) throws IOException {
 
-        Category category = categoryRepository.findById(categoryId).orElse(null);
+        System.out.println("=== DEBUG: addUserProgram method called ===");
+        System.out.println("Title: " + title);
+        System.out.println("Description: " + description);
+        System.out.println("Target Amount: " + targetAmount);
+        System.out.println("Category ID: " + categoryId);
+        System.out.println("Photo: " + (photo != null ? photo.getOriginalFilename() : "null"));
 
-        DonationProgram prog = new DonationProgram();
-        prog.setTitle(title);
-        prog.setDescription(description);
-        prog.setTargetAmount(targetAmount);
-        prog.setStartDate(LocalDate.parse(startDate));
-        prog.setEndDate(LocalDate.parse(endDate));
-        prog.setPhoto(photoName);
-        prog.setUser(user);
-        prog.setCategory(category);
-        prog.setStatus(DonationProgram.ProgramStatus.PENDING);
-        programRepository.save(prog);
+        try {
+            // Validasi user
+            User user = (User) session.getAttribute("user");
+            if (user == null) {
+                System.out.println("ERROR: User tidak ditemukan di session");
+                return "redirect:/login";
+            }
+            System.out.println("User found: " + user.getName() + " (ID: " + user.getId() + ")");
 
-        return "redirect:/dashboard/programs/mine?submitted"; // Redirect to my programs
+            // Validasi verifikasi user
+            if (user.getIsVerified() == null || !user.getIsVerified()) {
+                System.out.println("ERROR: User belum diverifikasi: " + user.getIsVerified());
+                return "redirect:/dashboard?notverified";
+            }
+            System.out.println("User verified: " + user.getIsVerified());
+
+            // Validasi category
+            Category category = categoryRepository.findById(categoryId).orElse(null);
+            if (category == null) {
+                System.out.println("ERROR: Category not found with ID: " + categoryId);
+                return "redirect:/dashboard/program/add?error=category";
+            }
+            System.out.println("Category found: " + category.getName());
+
+            // Handle file upload
+            String photoName = null;
+            if (photo != null && !photo.isEmpty()) {
+                String uploadDir = System.getProperty("user.dir") + "/uploads/";
+                File dir = new File(uploadDir);
+                if (!dir.exists()) {
+                    boolean created = dir.mkdirs();
+                    System.out.println("Upload directory created: " + created);
+                }
+
+                photoName = System.currentTimeMillis() + "_" + photo.getOriginalFilename();
+                photo.transferTo(new File(uploadDir + photoName));
+                System.out.println("Photo uploaded: " + photoName);
+            } else {
+                System.out.println("ERROR: No photo uploaded");
+                return "redirect:/dashboard/program/add?error=photo";
+            }
+
+            // Buat program baru
+            DonationProgram prog = new DonationProgram();
+            prog.setTitle(title);
+            prog.setDescription(description);
+            prog.setTargetAmount(targetAmount);
+            prog.setStartDate(LocalDate.parse(startDate));
+            prog.setEndDate(LocalDate.parse(endDate));
+            prog.setPhoto(photoName);
+            prog.setUser(user);
+            prog.setCategory(category);
+            prog.setStatus(DonationProgram.ProgramStatus.PENDING);
+
+            // Set default values
+            prog.setCollectedAmount(0.0);
+            prog.setDonationStatus(DonationProgram.DonationStatus.INACTIVE);
+
+            System.out.println("Program object created:");
+            System.out.println("- Title: " + prog.getTitle());
+            System.out.println("- Target: " + prog.getTargetAmount());
+            System.out.println("- User ID: " + prog.getUser().getId());
+            System.out.println("- Category ID: " + prog.getCategory().getId());
+
+            // Simpan ke database
+            DonationProgram savedProgram = programRepository.save(prog);
+            System.out.println("Program SAVED SUCCESSFULLY with ID: " + savedProgram.getId());
+
+            return "redirect:/dashboard/programs/mine?submitted=true";
+
+        } catch (Exception e) {
+            System.err.println("ERROR saving program: " + e.getMessage());
+            e.printStackTrace();
+            return "redirect:/dashboard/program/add?error=save";
+        }
     }
 
+// ...existing code...
     @GetMapping("/programs/mine")
     public String myPrograms(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
@@ -133,20 +188,19 @@ public class UserProgramController {
         var docOpt = documentRepository.findTopByUserOrderByIdDesc(user);
         model.addAttribute("docStatus", docOpt.map(UserDocument::getStatus).orElse(UserDocument.DocumentStatus.VERIFIED));
 
-
         return "dashboard_program_add";
     }
 
     @PostMapping("/program/edit/{id}")
     public String updateProgram(@PathVariable Long id,
-                                @RequestParam String title,
-                                @RequestParam String description,
-                                @RequestParam Double targetAmount,
-                                @RequestParam String startDate,
-                                @RequestParam String endDate,
-                                @RequestParam Long categoryId,
-                                @RequestParam(value = "photo", required = false) MultipartFile photo,
-                                HttpSession session) throws IOException {
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam Double targetAmount,
+            @RequestParam String startDate,
+            @RequestParam String endDate,
+            @RequestParam Long categoryId,
+            @RequestParam(value = "photo", required = false) MultipartFile photo,
+            HttpSession session) throws IOException {
 
         User user = (User) session.getAttribute("user");
         if (user == null) {

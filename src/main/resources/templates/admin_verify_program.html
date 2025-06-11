@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layoutAdmin :: layoutAdmin(~{::title}, ~{::main})}">
+
+<head>
+    <title>Verifikasi Program Donasi - Admin</title>
+    <style>
+        .status-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        .status-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        .program-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .program-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        .verification-form {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<main class="p-6 bg-slate-900 min-h-screen text-gray-100">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center gap-4 mb-4">
+            <div class="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center">
+                <i class="fas fa-check-circle text-sky-950 text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-green-500">Verifikasi Program Donasi</h1>
+                <p class="text-gray-400">Kelola dan verifikasi program donasi yang diajukan</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <!-- Pending Programs -->
+        <div class="status-card bg-slate-950 border border-amber-500/30 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-amber-400">Menunggu Verifikasi</p>
+                    <p class="text-2xl font-bold text-amber-300" th:text="${pendingCount}">0</p>
+                </div>
+                <div class="w-12 h-12 rounded-lg bg-amber-100 flex items-center justify-center">
+                    <i class="fas fa-clock text-amber-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approved Programs -->
+        <div class="status-card bg-slate-950 border border-green-500/30 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-green-400">Disetujui</p>
+                    <p class="text-2xl font-bold text-green-300" th:text="${approvedCount}">0</p>
+                </div>
+                <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center">
+                    <i class="fas fa-check text-green-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rejected Programs -->
+        <div class="status-card bg-slate-950 border border-red-500/30 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-red-400">Ditolak</p>
+                    <p class="text-2xl font-bold text-red-300" th:text="${rejectedCount}">0</p>
+                </div>
+                <div class="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center">
+                    <i class="fas fa-times text-red-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Programs -->
+        <div class="status-card bg-slate-950 border border-blue-500/30 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-blue-400">Total Program</p>
+                    <p class="text-2xl font-bold text-blue-300" th:text="${totalPrograms}">0</p>
+                </div>
+                <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                    <i class="fas fa-list text-blue-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="mb-6">
+        <div class="flex space-x-1 bg-slate-800 p-1 rounded-lg">
+            <button class="tab-btn active px-4 py-2 text-sm font-medium rounded-md transition-colors" 
+                    onclick="showTab('pending')">
+                <i class="fas fa-clock mr-2"></i>Pending (<span th:text="${pendingCount}">0</span>)
+            </button>
+            <button class="tab-btn px-4 py-2 text-sm font-medium rounded-md transition-colors" 
+                    onclick="showTab('all')">
+                <i class="fas fa-list mr-2"></i>Semua Program (<span th:text="${totalPrograms}">0</span>)
+            </button>
+        </div>
+    </div>
+
+    <!-- Pending Programs Section -->
+    <div id="pendingTab" class="tab-content">
+        <div class="bg-slate-950 border border-dark-400 rounded-xl p-6 mb-6">
+            <h3 class="text-xl font-semibold text-gray-100 mb-4">
+                <i class="fas fa-clock mr-2 text-amber-500"></i>
+                Program Menunggu Verifikasi
+            </h3>
+            
+            <div th:if="${programs.size() > 0}" class="space-y-6">
+                <div th:each="prog : ${programs}" class="program-card bg-slate-900 border border-dark-500 p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Program Info -->
+                        <div class="lg:col-span-2">
+                            <div class="flex items-start gap-4">
+                                <!-- Program Image -->
+                                <div class="flex-shrink-0">
+                                    <img th:if="${prog.photo}" 
+                                         th:src="@{'/uploads/' + ${prog.photo}}" 
+                                         class="w-20 h-20 object-cover rounded-lg">
+                                    <div th:unless="${prog.photo}" 
+                                         class="w-20 h-20 bg-gray-700 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-image text-gray-500 text-xl"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Program Details -->
+                                <div class="flex-1">
+                                    <h4 class="text-lg font-semibold text-gray-100 mb-2" th:text="${prog.title}"></h4>
+                                    <p class="text-sm text-gray-400 mb-3 line-clamp-3" th:text="${prog.description}"></p>
+                                    
+                                    <div class="grid grid-cols-2 gap-4 text-sm">
+                                        <div>
+                                            <span class="text-gray-500">Kategori:</span>
+                                            <span class="text-gray-300 ml-1" th:text="${prog.category.name}"></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-gray-500">Pengaju:</span>
+                                            <span class="text-gray-300 ml-1" th:text="${prog.user.name}"></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-gray-500">Target:</span>
+                                            <span class="text-primary-400 ml-1">
+                                                Rp <span th:text="${#numbers.formatDecimal(prog.targetAmount, 0, 'POINT', 0, 'COMMA')}"></span>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="text-gray-500">Periode:</span>
+                                            <span class="text-gray-300 ml-1">
+                                                <span th:text="${#temporals.format(prog.startDate, 'dd/MM/yyyy')}"></span> - 
+                                                <span th:text="${#temporals.format(prog.endDate, 'dd/MM/yyyy')}"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Verification Form -->
+                        <div class="verification-form p-4">
+                            <h5 class="text-md font-medium text-gray-200 mb-4">Verifikasi Program</h5>
+                            <form th:action="@{/admin/program/verify}" method="post" class="space-y-4">
+                                <input type="hidden" name="programId" th:value="${prog.id}">
+                                
+                                <!-- Status Selection -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Status Verifikasi</label>
+                                    <select name="status" required
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-600 bg-slate-800 text-gray-100 focus:ring-2 focus:ring-primary-500">
+                                        <option value="APPROVED">✅ Setujui</option>
+                                        <option value="REJECTED">❌ Tolak</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Donation Status (for approved) -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Status Donasi</label>
+                                    <select name="donationStatus"
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-600 bg-slate-800 text-gray-100 focus:ring-2 focus:ring-primary-500">
+                                        <option value="ACTIVE">🟢 Aktif</option>
+                                        <option value="INACTIVE">🔴 Tidak Aktif</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Rejection Reason -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Alasan Penolakan (Opsional)</label>
+                                    <textarea name="rejectionReason" rows="3" placeholder="Masukkan alasan penolakan..."
+                                              class="w-full px-3 py-2 rounded-lg border border-gray-600 bg-slate-800 text-gray-100 focus:ring-2 focus:ring-primary-500"></textarea>
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="flex gap-2">
+                                    <button type="submit" 
+                                            class="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200 text-sm font-medium">
+                                        <i class="fas fa-check mr-2"></i>Verifikasi
+                                    </button>
+                                    <a th:href="@{'/admin/program/' + ${prog.id}}" 
+                                       class="px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 transition-colors duration-200 text-sm font-medium">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Empty State -->
+            <div th:unless="${programs.size() > 0}" class="text-center py-12">
+                <div class="mx-auto h-16 w-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                    <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                </div>
+                <h4 class="text-lg font-medium text-gray-300 mb-2">Semua Program Terverifikasi</h4>
+                <p class="text-sm text-gray-500">Tidak ada program yang menunggu verifikasi saat ini.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Programs Section -->
+    <div id="allTab" class="tab-content hidden">
+        <div class="bg-slate-950 border border-dark-400 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-gray-100 mb-4">
+                <i class="fas fa-list mr-2 text-blue-500"></i>
+                Semua Program Donasi
+            </h3>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-slate-800">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Program</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Kategori</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Target</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status Program</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status Donasi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700">
+                        <tr th:each="prog : ${allPrograms}" class="hover:bg-slate-800">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <img th:if="${prog.photo}" 
+                                         th:src="@{'/uploads/' + ${prog.photo}}" 
+                                         class="h-10 w-10 rounded-lg object-cover mr-3">
+                                    <div th:unless="${prog.photo}" 
+                                         class="h-10 w-10 rounded-lg bg-gray-700 flex items-center justify-center mr-3">
+                                        <i class="fas fa-image text-gray-500"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-100" th:text="${prog.title}"></div>
+                                        <div class="text-sm text-gray-400" th:text="${prog.user.name}"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-300" th:text="${prog.category.name}"></td>
+                            <td class="px-6 py-4 text-sm text-primary-400">
+                                Rp <span th:text="${#numbers.formatDecimal(prog.targetAmount, 0, 'POINT', 0, 'COMMA')}"></span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span th:switch="${prog.status.name()}"
+                                      class="px-2 py-1 text-xs font-medium rounded-full">
+                                    <span th:case="'PENDING'" class="bg-amber-100 text-amber-800">⏳ Pending</span>
+                                    <span th:case="'APPROVED'" class="bg-green-100 text-green-800">✅ Disetujui</span>
+                                    <span th:case="'REJECTED'" class="bg-red-100 text-red-800">❌ Ditolak</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span th:switch="${prog.donationStatus?.name()}"
+                                      class="px-2 py-1 text-xs font-medium rounded-full">
+                                    <span th:case="'ACTIVE'" class="bg-blue-100 text-blue-800">🟢 Aktif</span>
+                                    <span th:case="'INACTIVE'" class="bg-gray-100 text-gray-800">🔴 Tidak Aktif</span>
+                                    <span th:case="*" class="bg-gray-100 text-gray-800"> Belum Diset</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <div class="flex space-x-2">
+                                    <a th:href="@{'/admin/program/' + ${prog.id}}" 
+                                       class="text-primary-400 hover:text-primary-300">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <div th:if="${prog.status.name() == 'PENDING'}" class="inline-block">
+                                        <button onclick="openVerifyModal([[${prog.id}]], '[[${prog.title}]]')" 
+                                                class="text-green-400 hover:text-green-300">
+                                            <i class="fas fa-check-circle"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Verify Modal -->
+    <div id="verifyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-slate-900 rounded-xl p-6 w-full max-w-md">
+                <h3 class="text-lg font-semibold text-gray-100 mb-4">
+                    <i class="fas fa-check-circle mr-2 text-primary-500"></i>
+                    Verifikasi Cepat
+                </h3>
+                <p class="text-gray-400 mb-4">Program: <span id="modalProgramTitle" class="text-gray-200"></span></p>
+                
+                <form th:action="@{/admin/program/verify}" method="post" class="space-y-4">
+                    <input type="hidden" id="modalProgramId" name="programId">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Aksi</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="status" value="APPROVED" class="mr-2">
+                                <span class="text-green-400">✅ Setujui Program</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="status" value="REJECTED" class="mr-2">
+                                <span class="text-red-400">❌ Tolak Program</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <button type="submit" 
+                                class="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                            Verifikasi
+                        </button>
+                        <button type="button" onclick="closeVerifyModal()" 
+                                class="px-4 py-2 bg-gray-600 text-gray-200 rounded-lg hover:bg-gray-500 transition-colors">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-primary-600', 'text-white');
+                btn.classList.add('text-gray-400');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.remove('hidden');
+            
+            // Add active class to selected button
+            event.target.classList.add('active', 'bg-primary-600', 'text-white');
+            event.target.classList.remove('text-gray-400');
+        }
+        
+        // Modal functionality
+        function openVerifyModal(programId, programTitle) {
+            document.getElementById('modalProgramId').value = programId;
+            document.getElementById('modalProgramTitle').textContent = programTitle;
+            document.getElementById('verifyModal').classList.remove('hidden');
+        }
+        
+        function closeVerifyModal() {
+            document.getElementById('verifyModal').classList.add('hidden');
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('verifyModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVerifyModal();
+            }
+        });
+    </script>
+</main>
+</html>

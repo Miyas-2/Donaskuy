@@ -2,42 +2,51 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main})}">
 
 <head>
-    <title th:text="${isEdit != null and isEdit ? 'Edit Program - Donaskuy SDGS' : 'Ajukan Program - Donaskuy SDGS'}"></title>
+    <title th:text="${isEdit != null and isEdit ? 'Edit Program - Donaskuy SDGS' : 'Ajukan Program - Donaskuy SDGS'}">
+    </title>
     <style>
         .form-card {
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
             border-radius: 16px;
         }
+
         .input-field {
             transition: all 0.3s ease;
             border-radius: 10px;
         }
+
         .input-field:focus {
             border-color: #0d9488;
             box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
         }
+
         .upload-area {
             transition: all 0.3s ease;
             border-radius: 10px;
             border: 2px dashed #d1d5db;
         }
+
         .upload-area:hover {
             border-color: #0d9488;
             background-color: #f8fafc;
         }
+
         .upload-area.dragover {
             border-color: #0d9488;
             background-color: #f0fdfa;
         }
+
         .submit-btn {
             background: linear-gradient(90deg, #0d9488, #14b8a6);
             transition: all 0.3s ease;
             border-radius: 10px;
         }
+
         .submit-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
         }
+
         .warning-banner {
             border-radius: 12px;
             background-color: #fffbeb;
@@ -58,7 +67,8 @@
                 Anda harus memverifikasi dokumen terlebih dahulu sebelum dapat mengajukan program donasi.
             </p>
             <div class="mt-3">
-                <a href="/dashboard/upload" class="inline-flex items-center text-sm font-medium text-amber-700 hover:text-amber-800">
+                <a href="/dashboard/upload"
+                    class="inline-flex items-center text-sm font-medium text-amber-700 hover:text-amber-800">
                     <i class="fas fa-arrow-right mr-2"></i>
                     <span>Verifikasi Dokumen Sekarang</span>
                 </a>
@@ -99,6 +109,8 @@
                 <p class="mt-1 text-xs text-gray-500">Jelaskan secara detail tujuan dan manfaat program Anda</p>
             </div>
 
+            <!-- ...existing code... -->
+
             <!-- Target Amount -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Target Dana</label>
@@ -106,9 +118,12 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <span class="text-gray-500">Rp</span>
                     </div>
-                    <input type="number" name="targetAmount" required min="1" th:value="${program?.targetAmount}"
-                        class="input-field block w-full pl-10 pr-4 py-3 border border-gray-300 placeholder-gray-400 focus:outline-none">
+                    <input type="number" name="targetAmount" required min="10000" max="999999999999" step="1000"
+                        th:value="${program?.targetAmount}"
+                        class="input-field block w-full pl-10 pr-4 py-3 border border-gray-300 placeholder-gray-400 focus:outline-none"
+                        placeholder="0">
                 </div>
+                <p class="mt-1 text-xs text-gray-500">Minimum Rp 10.000</p>
             </div>
 
             <!-- Date Range -->
@@ -130,7 +145,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Kategori Program</label>
                 <select name="categoryId" required
                     class="input-field mt-1 block w-full px-4 py-3 border border-gray-300 shadow-sm focus:outline-none">
-                    <option value="" disabled selected>Pilih Kategori</option>
+                    <option value="">Pilih Kategori</option>
                     <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
                         th:selected="${program?.category?.id == cat.id}"></option>
                 </select>
@@ -138,26 +153,30 @@
 
             <!-- Photo Upload -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Foto Program</label>
-                
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Foto Program <span th:unless="${isEdit}" class="text-red-500">*</span>
+                </label>
+
                 <!-- Current Image Preview (Edit Mode) -->
                 <div th:if="${program?.photo}" class="mb-4">
                     <p class="text-xs text-gray-500 mb-2">Foto saat ini:</p>
-                    <img th:src="@{'/uploads/' + ${program.photo}}" class="rounded-lg h-40 w-auto object-cover border border-gray-200">
+                    <img th:src="@{'/uploads/' + ${program.photo}}"
+                        class="rounded-lg h-40 w-auto object-cover border border-gray-200">
                 </div>
-                
+
                 <!-- New Image Preview -->
                 <div id="imagePreviewContainer" class="mb-4 hidden">
                     <p class="text-xs text-gray-500 mb-2">Pratinjau foto baru:</p>
                     <img id="imagePreview" class="rounded-lg h-40 w-auto object-cover border border-gray-200">
                 </div>
-                
+
                 <!-- Upload Area -->
                 <div id="uploadArea" class="upload-area mt-1 flex justify-center px-6 pt-10 pb-10">
                     <div class="space-y-3 text-center">
                         <i class="fas fa-cloud-upload-alt text-gray-400 text-4xl"></i>
                         <div class="flex flex-col sm:flex-row text-sm text-gray-600">
-                            <label class="relative cursor-pointer rounded-md font-medium text-primary-600 hover:text-primary-700">
+                            <label
+                                class="relative cursor-pointer rounded-md font-medium text-primary-600 hover:text-primary-700">
                                 <span th:text="${isEdit != null and isEdit ? 'Pilih foto baru' : 'Pilih foto'}"></span>
                                 <input type="file" name="photo" accept="image/*" th:required="${!isEdit}"
                                     class="sr-only" onchange="previewImage(this)">
@@ -176,6 +195,8 @@
                     th:text="${isEdit != null and isEdit ? 'Simpan Perubahan' : 'Ajukan Program'}">
                 </button>
             </div>
+
+            <!-- ...existing code... -->
         </form>
     </div>
 
@@ -188,7 +209,7 @@
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
 
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     preview.src = e.target.result;
                     previewContainer.classList.remove('hidden');
                 }
@@ -227,4 +248,5 @@
         });
     </script>
 </main>
+
 </html>

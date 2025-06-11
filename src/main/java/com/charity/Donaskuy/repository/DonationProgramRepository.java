@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.charity.Donaskuy.Model.DonationProgram;
+import com.charity.Donaskuy.Model.DonationProgram.ProgramStatus;
 import com.charity.Donaskuy.Model.User;
 
 @Repository
@@ -26,5 +27,10 @@ public interface DonationProgramRepository extends JpaRepository<DonationProgram
             Long categoryId
     );
 
+
+
+    long countByStatus(ProgramStatus status);
+
     List<DonationProgram> findByCategory_Id(Long categoryId);
+
 }
